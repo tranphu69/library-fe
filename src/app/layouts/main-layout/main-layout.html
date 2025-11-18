@@ -1,16 +1,9 @@
 <div class="main-layout">
-  <header>
-    <nav>
-      <a routerLink="/home">Homes </a>
-      <a routerLink="/dashboard">Dashboards</a>
-    </nav>
-  </header>
-  
-  <main>
+  <div class="sidebar">
+    <app-sidebar></app-sidebar>
+  </div>
+  <div class="content">
+    <app-header></app-header>
     <router-outlet></router-outlet>
-  </main>
-  
-  <footer>
-    <p>© 2025 Your App</p>
-  </footer>
+  </div>
 </div>

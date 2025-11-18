@@ -1,0 +1,50 @@
+.main-layout {
+    display: flex;
+    height: 100vh; 
+}
+
+.sidebar {
+  flex: 0 0 256px;
+  background: #1e293b;
+  transition: transform 0.3s ease;
+}
+
+.content {
+  flex: 1;
+  background: #fff;
+  overflow: auto;
+}
+
+@media (max-width: 1024px) {
+    .sidebar {
+        flex: 0 0 200px;
+    }
+}
+
+@media (max-width: 768px) {
+    .main-layout {
+        flex-direction: column;
+    }
+    .sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        height: 100vh;
+        z-index: 1000;
+        transform: translateX(-100%);
+        box-shadow: 2px 0 8px rgba(0,0,0,0.1);
+    }
+    .sidebar.active {
+        transform: translateX(0);
+    }
+    .content {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .sidebar {
+        flex: 0 0 100%;
+        width: 80%;
+    }
+}
