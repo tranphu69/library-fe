@@ -1,9 +1,11 @@
 <div class="main-layout">
-  <div class="sidebar" [class.active]="isSidebarOpen()" (click)="toggleSidebar()">
-    <app-sidebar></app-sidebar>
+  <div class="sidebar" [class.active]="isSidebarOpen()" (click)="toggleSidebar()" >
+    <app-sidebar (menuSelect)="onMenuSelect($event)"></app-sidebar>
   </div>
   <div class="content">
-    <app-header [toggleSidebar]="toggleSidebar"></app-header>
-    <router-outlet></router-outlet>
+    <app-header [toggleSidebar]="toggleSidebar" [title]="headerTitle()"></app-header>
+    <div class="content-item">
+      <router-outlet></router-outlet>
+    </div>
   </div>
 </div>

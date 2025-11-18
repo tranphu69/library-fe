@@ -9,4 +9,5 @@ import { Component, Input } from '@angular/core';
 
 export class Header {
   @Input() toggleSidebar!: () => void;
+  @Input() title!: string;
 }

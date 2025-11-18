@@ -15,9 +15,17 @@
 /* Content chính */
 .content {
     flex: 1;
-    background: #fff;
+    background: #E4E7EC;
     overflow: auto;
     transition: margin-left 0.3s ease;
+}
+
+.content-item {
+    margin: 20px;
+    height: calc(100% - 120px);
+    border-radius: 8px;
+    border: 1px solid #D0D5DD;
+    background-color: #FFFFFF;
 }
 
 /* Overlay khi sidebar mở trên mobile */

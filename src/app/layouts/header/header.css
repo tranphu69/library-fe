@@ -3,6 +3,8 @@
     height: 65px;
     padding: 16px 24px;
     align-items: center;
+    background-color: #FFFFFF;
+    border-bottom: 1px solid #D0D5DD;
 }
 
 .header-title {

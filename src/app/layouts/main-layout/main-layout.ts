@@ -12,6 +12,11 @@ import { Header } from '../header/header';
 
 export class MainLayout {
   isSidebarOpen = signal(true);
+  headerTitle = signal("Quản lý người dùng");
+
+  onMenuSelect(title: string) {
+    this.headerTitle.set(title);
+  }
   
   toggleSidebar = () => {
     this.isSidebarOpen.update(value => !value);
