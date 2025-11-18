@@ -11,18 +11,37 @@ export const routes: Routes = [
       {
         path: '',
         redirectTo: 'home',
-        pathMatch: 'full'
+        pathMatch: 'full',
       },
       {
         path: 'home',
-        loadChildren: () => import('./features/home/home-module').then(m => m.HomeModule)
+        loadChildren: () => import('./features/home/home-module').then((m) => m.HomeModule),
       },
       {
         path: 'dashboard',
         // canActivate: [AuthGuard],
-        loadChildren: () => import('./features/dashboard/dashboard-module').then(m => m.DashboardModule)
-      }
-    ]
+        loadChildren: () =>
+          import('./features/dashboard/dashboard-module').then((m) => m.DashboardModule),
+      },
+      {
+        path: 'user',
+        // canActivate: [AuthGuard],
+        loadChildren: () =>
+          import('./features/user/user-module').then((m) => m.UserModule),
+      },
+      {
+        path: 'role',
+        // canActivate: [AuthGuard],
+        loadChildren: () =>
+          import('./features/role/role-module').then((m) => m.RoleModule),
+      },
+      {
+        path: 'permission',
+        // canActivate: [AuthGuard],
+        loadChildren: () =>
+          import('./features/permission/permission-module').then((m) => m.PermissionModule),
+      },
+    ],
   },
   {
     path: 'auth',
@@ -30,12 +49,12 @@ export const routes: Routes = [
     children: [
       {
         path: 'login',
-        loadChildren: () => import('./features/auth/auth-module').then(m => m.AuthModule)
-      }
-    ]
+        loadChildren: () => import('./features/auth/auth-module').then((m) => m.AuthModule),
+      },
+    ],
   },
   {
     path: '**',
-    redirectTo: 'home'
-  }
+    redirectTo: 'home',
+  },
 ];

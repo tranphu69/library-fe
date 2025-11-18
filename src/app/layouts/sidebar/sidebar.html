@@ -1,1 +1,14 @@
-<p>sidebar works!</p>
+<div class="sidebar">
+  @for (menuItem of pagesMenu(); track menuItem.group) {
+    <ul class="group-item">
+        @for (item of menuItem.items; track item.route) {
+            <li class="menu-item">
+                <a [href]="item.route">
+                    <span class="text-item">ICO</span>
+                    <span class="text-item">{{ item.label }}</span>
+                </a>
+            </li>
+        }
+    </ul>
+  }
+</div>

@@ -1,0 +1,27 @@
+.sidebar {
+    width: 256px;
+    background: #202226;
+}
+
+.group-item {
+    padding-top: 20px;
+    padding-left: 20px;
+}
+
+span {
+    display: block;
+}
+
+.menu-item {
+    padding: 10px 0px;
+}
+
+a {
+    display: flex;
+    gap: 10px;
+}
+
+.text-item {
+    color: aliceblue;
+    font-size: 14px;
+}

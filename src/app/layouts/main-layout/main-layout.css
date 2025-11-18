@@ -7,7 +7,7 @@
 /* Sidebar mặc định */
 .sidebar {
     flex: 0 0 256px;
-    background: #1e293b;
+    background: #202226;
     transition: all 0.3s ease;
     overflow: hidden;
 }
