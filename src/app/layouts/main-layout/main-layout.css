@@ -1,50 +1,103 @@
 .main-layout {
     display: flex;
-    height: 100vh; 
+    height: 100vh;
+    position: relative;
 }
 
+/* Sidebar mặc định */
 .sidebar {
-  flex: 0 0 256px;
-  background: #1e293b;
-  transition: transform 0.3s ease;
+    flex: 0 0 256px;
+    background: #1e293b;
+    transition: all 0.3s ease;
+    overflow: hidden;
 }
 
+/* Content chính */
 .content {
-  flex: 1;
-  background: #fff;
-  overflow: auto;
+    flex: 1;
+    background: #fff;
+    overflow: auto;
+    transition: margin-left 0.3s ease;
 }
 
+/* Overlay khi sidebar mở trên mobile */
+.main-layout::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+/* Laptop / tablet lớn */
 @media (max-width: 1024px) {
     .sidebar {
         flex: 0 0 200px;
     }
 }
 
+/* Tablet / mobile */
 @media (max-width: 768px) {
-    .main-layout {
-        flex-direction: column;
-    }
     .sidebar {
         position: fixed;
         left: 0;
         top: 0;
         height: 100vh;
         z-index: 1000;
+        width: 280px;
+        max-width: 85%;
         transform: translateX(-100%);
-        box-shadow: 2px 0 8px rgba(0,0,0,0.1);
+        box-shadow: 2px 0 20px rgba(0,0,0,0.15);
+        flex: none;
     }
     .sidebar.active {
         transform: translateX(0);
     }
+    /* Hiển thị overlay khi sidebar active */
+    .sidebar.active ~ .content::before,
+    .main-layout:has(.sidebar.active)::before {
+        opacity: 1;
+        visibility: visible;
+    }
     .content {
         width: 100%;
+        margin-left: 0;
     }
 }
 
+/* Desktop - sidebar có thể thu gọn */
+@media (min-width: 769px) {
+    .sidebar:not(.active) {
+        flex: 0 0 80px; /* Thu gọn thành icon bar */
+    }
+    .content {
+        margin-left: 0;
+    }
+}
+
+/* Mobile nhỏ */
 @media (max-width: 480px) {
     .sidebar {
-        flex: 0 0 100%;
-        width: 80%;
+        width: 280px;
+        max-width: 85%;
     }
+}
+
+/* Animation cho các items bên trong sidebar */
+.sidebar :deep(.sidebar-item) {
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+.sidebar:not(.active) :deep(.sidebar-item) {
+    opacity: 0;
+    transform: translateX(-10px);
+}
+.sidebar.active :deep(.sidebar-item) {
+    opacity: 1;
+    transform: translateX(0);
 }

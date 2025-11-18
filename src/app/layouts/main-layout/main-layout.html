@@ -1,9 +1,9 @@
 <div class="main-layout">
-  <div class="sidebar">
+  <div class="sidebar" [class.active]="isSidebarOpen()" (click)="toggleSidebar()">
     <app-sidebar></app-sidebar>
   </div>
   <div class="content">
-    <app-header></app-header>
+    <app-header [toggleSidebar]="toggleSidebar"></app-header>
     <router-outlet></router-outlet>
   </div>
 </div>
