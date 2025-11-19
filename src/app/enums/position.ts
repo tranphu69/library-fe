@@ -1,0 +1,6 @@
+export enum Position {
+  STUDENT = "STUDENT",
+  LECTURER = "LECTURER",
+  LIBRARIAN = "LIBRARIAN",
+  ADMIN = "ADMIN"
+}
