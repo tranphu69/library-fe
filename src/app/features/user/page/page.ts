@@ -13,6 +13,30 @@ import { ListTable } from '../component/list-table/list-table';
 })
 export class Page implements OnInit {
   private userService = inject(UserService);
+  columns = [
+    "#", 
+    "Tên người dùng", 
+    "Email", 
+    "Tên đầy đủ", 
+    "Mã người dùng", 
+    "Số điện thoại", 
+    "Ngành học", 
+    "Khóa học", 
+    "Chức vụ", 
+    "Giới tính", 
+    "Ngày sinh", 
+    "Trạng thái", 
+    "Ngày tạo", 
+    "Ngày cập nhật", 
+    "Người tạo", 
+    "Người cập nhật", 
+    "Lần đăng nhập gần nhất", 
+    "Số lần đăng nhập sai", 
+    "Thời điểm hết hạn khóa", 
+    "Xác thực bậc hai", 
+    "Vai trò"
+  ];
+  data = [];
 
   ngOnInit() {
     this.loadUsers();
@@ -37,10 +61,9 @@ export class Page implements OnInit {
       sortBy: 'createdAt',
       sortType: 'DESC',
     };
-
     this.userService.getListUsers(params).subscribe({
       next: (res) => {
-        console.log("data res: ", res)
+        this.data = res?.result?.data || [];
       },
       error: (err) => {
         console.error('Error loading users:', err);

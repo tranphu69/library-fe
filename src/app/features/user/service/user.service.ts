@@ -10,7 +10,7 @@ import { ListUser, User } from '../../../models/user.model';
 export class UserService {
     private apiService = inject(ApiService);
 
-    getListUsers(params?: ListUser): Observable<User[]> {
-        return this.apiService.post<User[]>("user/list", params);
+    getListUsers(params?: ListUser): Observable<any> {
+        return this.apiService.post<any>("user/list", params);
     }
 }
