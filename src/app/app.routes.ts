@@ -10,7 +10,7 @@ export const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: 'user',
+        redirectTo: 'permission',
         pathMatch: 'full',
       },
       {

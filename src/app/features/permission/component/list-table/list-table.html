@@ -1,0 +1,37 @@
+<div class="table-wrapper">
+  <div class="table-scroll">
+    <table mat-table [dataSource]="tableDataSource" class="mat-elevation-z8 fixed-table">
+      <ng-container *ngFor="let column of columnConfig" [matColumnDef]="column.key">
+        <th mat-header-cell *matHeaderCellDef [style.width.px]="column.width" class="fixed-col">
+          {{ column.label }}
+        </th>
+        <td
+          mat-cell
+          *matCellDef="let element"
+          [style.width.px]="column.width"
+          class="fixed-col"
+          [title]="element[column.key]"
+        >
+          {{ element[column.key] | truncate : 20 }}
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+  </div>
+  <div class="pagination-wrapper">
+    <div class="page-size">
+      <label for="pageSize">Hiển thị:</label>
+      <select id="pageSize" (change)="changePageSize($event)">
+        <option [value]="10" [selected]="params.size === 10">10</option>
+        <option [value]="20" [selected]="params.size === 20">20</option>
+        <option [value]="50" [selected]="params.size === 50">50</option>
+      </select>
+    </div>
+    <button (click)="changePage((params.page ?? 0) - 1)" [disabled]="(params.page ?? 0) === 0">
+      « Prev
+    </button>
+    <span>Trang {{ (params.page ?? 0) + 1 }}</span>
+    <button (click)="changePage((params.page ?? 0) + 1)">Next »</button>
+  </div>
+</div>

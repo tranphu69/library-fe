@@ -1,1 +1,13 @@
-<p>page works permission!</p>
+<div class="container">
+  <div *ngIf="isLoading">
+    <p>Đang tải dữ liệu...</p>
+  </div>
+  <app-list-table
+    *ngIf="!isLoading"
+    [dataSource]="data"
+    [columnConfig]="columnConfig"
+    [params]="params"
+    (paramsChange)="updateParams($event)"
+  >
+  </app-list-table>
+</div>
