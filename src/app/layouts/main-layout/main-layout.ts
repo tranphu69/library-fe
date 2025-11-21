@@ -12,7 +12,7 @@ import { Header } from '../header/header';
 
 export class MainLayout {
   isSidebarOpen = signal(true);
-  headerTitle = signal("Quản lý người dùng");
+  headerTitle = signal("Quản lý vai trò");
 
   onMenuSelect(title: string) {
     this.headerTitle.set(title);

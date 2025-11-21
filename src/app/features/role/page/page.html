@@ -1,1 +1,6 @@
-<p>page works role!</p>
+<div class="container">
+  <div *ngIf="isLoading()">
+    <p>Đang tải dữ liệu...</p>
+  </div>
+  <app-list-table *ngIf="!isLoading"> </app-list-table>
+</div>
