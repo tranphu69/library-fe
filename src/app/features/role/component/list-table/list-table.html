@@ -1,1 +1,49 @@
-<p>list-table works!</p>
+<div class="table-wrapper">
+  <div class="table-scroll">
+    <table
+      mat-table
+      [dataSource]="matDataSource"
+      matSort
+      (matSortChange)="announceSortChange($event)"
+      class="mat-elevation-z8 fixed-table"
+    >
+      <ng-container *ngFor="let column of columnConfig" [matColumnDef]="column.key">
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          [style.width.px]="column.width"
+          class="fixed-col"
+        >
+          <ng-container *ngIf="column.sortable; else noSort">
+            <span [mat-sort-header]="column.key">{{ column.label }}</span>
+          </ng-container>
+          <ng-template #noSort>
+            {{ column.label }}
+          </ng-template>
+        </th>
+        
+        <td
+          mat-cell
+          *matCellDef="let element"
+          [style.width.px]="column.width"
+          class="fixed-col"
+          [title]="element[column.key]"
+        >
+          {{ element[column.key] | truncate : 20 }}
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" [attr.colspan]="displayedColumns.length">Không có dữ liệu</td>
+      </tr>
+    </table>
+  </div>
+  <mat-paginator
+    [pageSizeOptions]="[5, 10, 20, 50]"
+    [pageSize]="10"
+    showFirstLastButtons
+    aria-label="Select page"
+  >
+  </mat-paginator>
+</div>

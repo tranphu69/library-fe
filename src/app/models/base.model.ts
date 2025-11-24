@@ -9,4 +9,11 @@ export interface ColumnConfig {
   key: string;
   label: string;
   width: number;
+  sortable?: boolean;
+}
+
+export interface NoAction {
+  id: number;
+  name: string;
+  description: string;
 }

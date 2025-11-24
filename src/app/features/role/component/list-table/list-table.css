@@ -1,0 +1,26 @@
+.table-wrapper {
+  width: 100%;
+  overflow: hidden;
+}
+
+.table-scroll {
+  overflow-x: auto;
+  overflow-y: hidden;
+  width: 100%;
+}
+
+.fixed-table {
+  table-layout: fixed;
+  border-collapse: collapse;
+  width: max-content;
+}
+
+.fixed-col {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+::ng-deep .mat-mdc-paginator-page-size-label {
+  display: none;
+}

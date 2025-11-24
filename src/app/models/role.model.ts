@@ -1,3 +1,5 @@
+import { NoAction } from "./base.model";
+
 export interface ListRole {
     name?: string | null;
     action?: string | null;
@@ -5,6 +7,7 @@ export interface ListRole {
     size?: number | null;
     sortBy?: string | null;
     sortType?: string | null;
+    permissions?: string;
 }
 
 export interface Role {
@@ -12,9 +15,10 @@ export interface Role {
     id: number;
     name: string;
     description?: string | null;
-    action: number;
+    action: number | string;
     createdAt?: string | null;
     updatedAt?: string | null;
     createdBy?: string | null;
     updatedBy?: string | null;
+    permissions?: NoAction[];
 }

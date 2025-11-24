@@ -1,4 +1,4 @@
-import { Component, inject, ChangeDetectorRef, signal, effect } from '@angular/core';
+import { Component, inject, signal, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RoleService } from '../service/role.service';
 import { ListRole, Role } from '../../../models/role.model';
@@ -11,17 +11,19 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './page.html',
   styleUrl: './page.css',
 })
+
 export class Page {
   private roleService = inject(RoleService);
   columnConfig = [
-    { key: 'index', label: '#', width: 50 },
-    { key: 'name', label: 'Tên', width: 180 },
-    { key: 'description', label: 'Mô tả', width: 180 },
-    { key: 'action', label: 'Trạng thái', width: 180 },
-    { key: 'createdAt', label: 'Ngày tạo', width: 180 },
-    { key: 'updatedAt', label: 'Ngày cập nhật', width: 180 },
-    { key: 'createdBy', label: 'Người tạo', width: 180 },
-    { key: 'updatedBy', label: 'Người cập nhật', width: 180 },
+    { key: 'index', label: '#', width: 50, sortable: false },
+    { key: 'name', label: 'Tên', width: 180, sortable: true },
+    { key: 'description', label: 'Mô tả', width: 180, sortable: false },
+    { key: 'action', label: 'Trạng thái', width: 180, sortable: true },
+    { key: 'permissions', label: 'Các quyền thao tác', width: 180, sortable: false},
+    { key: 'createdAt', label: 'Ngày tạo', width: 180, sortable: true },
+    { key: 'updatedAt', label: 'Ngày cập nhật', width: 180, sortable: true },
+    { key: 'createdBy', label: 'Người tạo', width: 180, sortable: true },
+    { key: 'updatedBy', label: 'Người cập nhật', width: 180, sortable: true },
   ];
   data = signal<Role[]>([]);
   isLoading = signal(true);
@@ -32,6 +34,7 @@ export class Page {
     size: 10,
     sortBy: 'createdAt',
     sortType: 'DESC',
+    permissions: ''
   });
 
   constructor() {
@@ -39,8 +42,7 @@ export class Page {
       () => {
         const currentParams = this.params();
         this.loadRoles(currentParams);
-      },
-      { allowSignalWrites: true }
+      }
     );
   }
 
@@ -48,9 +50,7 @@ export class Page {
     this.isLoading.set(true);
     this.roleService.getListRoles(params).subscribe({
       next: (res) => {
-        this.data.set(
-          res?.result?.data?.map((item, index) => ({ ...item, index: index + 1 })) ?? []
-        );
+        this.data.set(res?.result?.data ?? []);
         this.isLoading.set(false);
       },
       error: (err) => {
@@ -58,9 +58,5 @@ export class Page {
         this.isLoading.set(false);
       },
     });
-  }
-
-  onPageChange(page: number) {
-    this.params.update((p) => ({ ...p, page }));
   }
 }

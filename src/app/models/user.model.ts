@@ -1,6 +1,7 @@
 import { Position } from "../enums/position";
 import { Gender } from "../enums/gender";
 import { AccountStatus } from "../enums/accountStatus";
+import { NoAction } from "./base.model";
 
 export interface ListUser {
     username?: string | null;
@@ -19,12 +20,6 @@ export interface ListUser {
     size?: number;
     sortBy?: string;
     sortType?: string;
-}
-
-export interface NoAction {
-    id: number;
-    name: string;
-    description?: string;
 }
 
 export interface User {
