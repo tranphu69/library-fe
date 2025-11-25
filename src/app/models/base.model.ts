@@ -1,7 +1,11 @@
 export interface Data<T> {
     code?: number;
     result?: {
-        data?: T[]
+        data?: T[];
+        currentPage?: number;
+        currentSize?: number;
+        totalElements?: number;
+        totalPages?: number;
     };
 }
 

@@ -1,31 +1,44 @@
-import { AfterViewInit, Component, Input, ViewChild, OnChanges, SimpleChanges, inject } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core';
 import { ColumnConfig } from '../../../../models/base.model';
 import { ListRole, Role } from '../../../../models/role.model';
 import { CommonModule, DatePipe } from '@angular/common';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import {MatSort, Sort, MatSortModule} from '@angular/material/sort';
+import { Sort, MatSortModule } from '@angular/material/sort';
 import { TruncatePipe } from '../../../../shared/utils/truncate.pipe';
-import {LiveAnnouncer} from '@angular/cdk/a11y';
+import { PageEvent } from '@angular/material/paginator';
+import { Data } from '../../../../models/base.model';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-list-table',
-  imports: [CommonModule, MatTableModule, MatPaginatorModule, TruncatePipe, MatSortModule],
+  imports: [
+    CommonModule,
+    MatProgressSpinnerModule,
+    MatTableModule,
+    MatPaginatorModule,
+    TruncatePipe,
+    MatSortModule,
+    MatTooltipModule,
+  ],
   providers: [DatePipe],
   templateUrl: './list-table.html',
   styleUrl: './list-table.css',
 })
-export class ListTable implements AfterViewInit, OnChanges {
-  private _dataSource: Role[] = [];
+export class ListTable implements OnChanges {
+  private _dataSource: Data<Role> = {};
   private _columnConfig: ColumnConfig[] = [];
-  private _liveAnnouncer = inject(LiveAnnouncer);
 
   @Input()
-  set dataSource(value: Role[]) {
+  set dataSource(value: Data<Role>) {
     this._dataSource = value;
     this.transformData();
   }
-  @Input() 
+  get dataSource(): Data<Role> {
+    return this._dataSource;
+  }
+  @Input()
   set columnConfig(value: ColumnConfig[]) {
     this._columnConfig = value;
     this.displayedColumns = value?.map((col) => col.key) ?? [];
@@ -34,11 +47,10 @@ export class ListTable implements AfterViewInit, OnChanges {
     return this._columnConfig;
   }
   @Input() params!: ListRole;
+  @Input() loading!: boolean;
   displayedColumns: string[] = [];
   matDataSource = new MatTableDataSource<any>([]);
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort!: MatSort;
-
+  @Output() paramsChange = new EventEmitter<ListRole>();
   constructor(private datePipe: DatePipe) {}
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -47,14 +59,9 @@ export class ListTable implements AfterViewInit, OnChanges {
     }
   }
 
-  ngAfterViewInit() {
-    this.matDataSource.sort = this.sort
-    this.matDataSource.paginator = this.paginator;
-  }
-
   private transformData(): void {
     const transformedData =
-      this._dataSource?.map((item, index) => ({
+      this._dataSource?.result?.data?.map((item, index) => ({
         ...item,
         index: index + 1,
         action: item.action === 1 ? 'Hoạt động' : 'Không hoạt động',
@@ -63,20 +70,36 @@ export class ListTable implements AfterViewInit, OnChanges {
         updatedAt: this.datePipe.transform(item.updatedAt, 'dd/MM/yyyy HH:mm:ss'),
       })) ?? [];
     this.matDataSource.data = transformedData;
-    if (this.paginator) {
-      this.matDataSource.paginator = this.paginator;
-    }
-  }
-
-  announceSortChange(sortState: Sort) {
-    if (sortState.direction) {
-      this._liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);
-    } else {
-      this._liveAnnouncer.announce('Sorting cleared');
-    }
   }
 
   getColumnLabel(key: string): string {
     return this.columnConfig.find((col) => col.key === key)?.label || key;
+  }
+
+  onPaginatorChange(event: PageEvent) {
+    const updatedParams = {
+      ...this.params,
+      page: event.pageIndex,
+      size: event.pageSize,
+    };
+    this.paramsChange.emit(updatedParams);
+  }
+
+  onSortChange(sortState: Sort) {
+    let updatedParams;
+    if (sortState?.direction) {
+      updatedParams = {
+        ...this.params,
+        sortBy: sortState.active,
+        sortType: sortState.direction === 'asc' ? 'ASC' : 'DESC',
+      };
+    } else {
+      updatedParams = {
+        ...this.params,
+        sortBy: 'createdAt',
+        sortType: 'DESC',
+      };
+    }
+    this.paramsChange.emit(updatedParams);
   }
 }

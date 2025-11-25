@@ -1,12 +1,10 @@
 <div class="container">
-  <div *ngIf="isLoading()">
-    <p>Đang tải dữ liệu...</p>
-  </div>
   <app-list-table
-    *ngIf="!isLoading()"
+    [loading]="isLoading()"
     [dataSource]="data()"
     [columnConfig]="columnConfig"
     [params]="params()"
+    (paramsChange)="onParamsChange($event)"
   >
   </app-list-table>
 </div>
