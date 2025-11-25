@@ -5,6 +5,13 @@
     [columnConfig]="columnConfig"
     [params]="params()"
     (paramsChange)="onParamsChange($event)"
+    (openModalChange)="onModalChange($event)"
+    (onRecordChange)="onRecordChange($event)"
   >
   </app-list-table>
+  <app-form-modal
+    [isOpen]="isOpenModal()"
+    [record]="record()"
+    (openModalChange)="onModalChange($event)"
+  ></app-form-modal>
 </div>

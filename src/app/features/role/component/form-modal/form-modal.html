@@ -1,0 +1,44 @@
+<ng-template #dialogTemplate>
+  <h2 mat-dialog-title>{{ record() ? 'Chỉnh sửa' : 'Thêm mới' }} Role</h2>
+  <mat-dialog-content>
+    <form [formGroup]="roleForm" class="form-container">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Tên</mat-label>
+        <input matInput formControlName="name" placeholder="Nhập tên role" autocomplete="off" />
+        <mat-error *ngIf="roleForm.get('name')?.invalid">
+          {{ getErrorMessage('name') }}
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Mô tả</mat-label>
+        <textarea
+          matInput
+          formControlName="description"
+          placeholder="Nhập mô tả"
+          rows="4"
+          autocomplete="off"
+        ></textarea>
+        <mat-error *ngIf="roleForm.get('description')?.invalid">
+          {{ getErrorMessage('description') }}
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Hành động</mat-label>
+        <mat-select formControlName="action" placeholder="Chọn hành động">
+          <mat-option *ngFor="let action of actions" [value]="action.value">
+            {{ action.label }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="roleForm.get('action')?.invalid">
+          {{ getErrorMessage('action') }}
+        </mat-error>
+      </mat-form-field>
+    </form>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button mat-button (click)="closeDialog()">Hủy</button>
+    <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="roleForm.invalid">
+      {{ record() ? 'Cập nhật' : 'Thêm mới' }}
+    </button>
+  </mat-dialog-actions>
+</ng-template>

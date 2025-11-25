@@ -5,10 +5,11 @@ import { ListRole, Role } from '../../../models/role.model';
 import { ListTable } from '../component/list-table/list-table';
 import { FormsModule } from '@angular/forms';
 import { Data } from '../../../models/base.model';
+import { FormModal } from '../component/form-modal/form-modal';
 
 @Component({
   selector: 'app-page',
-  imports: [CommonModule, FormsModule, ListTable],
+  imports: [CommonModule, FormsModule, ListTable, FormModal],
   templateUrl: './page.html',
   styleUrl: './page.css',
 })
@@ -27,6 +28,8 @@ export class Page {
   ];
   data = signal<Data<Role>>({});
   isLoading = signal(true);
+  isOpenModal = signal(false);
+  record = signal<Role | null>(null);
   params = signal<ListRole>({
     name: '',
     action: '',
@@ -56,6 +59,15 @@ export class Page {
         this.isLoading.set(false);
       },
     });
+  }
+
+  onModalChange(value: boolean | Event) {
+    const newValue = typeof value === 'boolean' ? value : false;
+    this.isOpenModal.set(newValue);
+  }
+
+  onRecordChange(newRecord: Role | null) {
+    this.record.set(newRecord);
   }
 
   onParamsChange(newParams: ListRole) {
