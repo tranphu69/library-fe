@@ -356,3 +356,12 @@
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+/*đây là đoạn css với icon clould với span*/
+.mdc-button .mdc-button__label{
+  display: flex;
+  width: 140px;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+}

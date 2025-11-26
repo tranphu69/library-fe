@@ -64,6 +64,7 @@ export class FormModal {
       permissions: ['', Validators.required],
     });
     effect(() => {
+      console.log('record', this.record());
       const template = this.dialogTemplate();
       const isOpen = this.isOpen();
       if (isOpen && template && !this.dialogRef) {
@@ -118,26 +119,47 @@ export class FormModal {
   onSubmit() {
     if (this.roleForm.valid) {
       const formValue = this.roleForm.value;
-      console.log('formValue', formValue);
-      this.roleService.putEdit(formValue, this.record()?.id).subscribe({
-        next: (res) => {
-          this.closeDialog();
-          this.snackBar.open('Cập nhật thành công!', 'Đóng', {
-            duration: 3000,
-            horizontalPosition: 'left',
-            verticalPosition: 'top',
-          });
-          this.paramsChange.emit({ ...this.params });
-        },
-        error: (err) => {
-          console.log('err: ', err);
-          this.snackBar.open('Cập nhật không thành công!', 'Đóng', {
-            duration: 3000,
-            horizontalPosition: 'left',
-            verticalPosition: 'top',
-          });
-        },
-      });
+      if (this.record()) {
+        this.roleService.putEdit(formValue, this.record()?.id).subscribe({
+          next: (res) => {
+            this.closeDialog();
+            this.snackBar.open('Cập nhật thành công!', 'Đóng', {
+              duration: 3000,
+              horizontalPosition: 'left',
+              verticalPosition: 'top',
+            });
+            this.paramsChange.emit({ ...this.params });
+          },
+          error: (err) => {
+            console.log('err: ', err);
+            this.snackBar.open('Cập nhật không thành công!', 'Đóng', {
+              duration: 3000,
+              horizontalPosition: 'left',
+              verticalPosition: 'top',
+            });
+          },
+        });
+      } else {
+        this.roleService.postCreate(formValue).subscribe({
+          next: (res) => {
+            this.closeDialog();
+            this.snackBar.open('Tạo mới thành công!', 'Đóng', {
+              duration: 3000,
+              horizontalPosition: 'left',
+              verticalPosition: 'top',
+            });
+            this.paramsChange.emit({ ...this.params });
+          },
+          error: (err) => {
+            console.log('err: ', err);
+            this.snackBar.open('Tạo mới không thành công!', 'Đóng', {
+              duration: 3000,
+              horizontalPosition: 'left',
+              verticalPosition: 'top',
+            });
+          },
+        });
+      }
     } else {
       Object.keys(this.roleForm.controls).forEach((key) => {
         this.roleForm.get(key)?.markAsTouched();

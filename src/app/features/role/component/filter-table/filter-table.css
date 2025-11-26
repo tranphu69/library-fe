@@ -1,0 +1,24 @@
+.container {
+    margin-bottom: 20px;
+}
+
+.action {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.btn-new {
+    height: 45px;
+    width: 140px;
+    border-radius: 8px;
+    background-color: #fff;
+    padding: 10px 14px;
+    border: 1px solid #D0D5DD;
+}
+
+.btn-red {
+    background-color: #EE0033;
+    color: #fff !important;
+    border: none;
+}

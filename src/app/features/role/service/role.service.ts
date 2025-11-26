@@ -30,4 +30,8 @@ export class RoleService {
   putEdit(params?: RoleEditCreate, id?: number): Observable<string> {
     return this.apiService.put<string>(`role/${id}`, params);
   }
+
+  postCreate(params?: RoleEditCreate): Observable<string> {
+    return this.apiService.post<string>('role', params);
+  }
 }

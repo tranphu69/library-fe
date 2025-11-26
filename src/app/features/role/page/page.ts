@@ -7,10 +7,11 @@ import { FormsModule } from '@angular/forms';
 import { Data } from '../../../models/base.model';
 import { FormModal } from '../component/form-modal/form-modal';
 import { Permission } from '../../../models/permission.model';
+import { FilterTable } from '../component/filter-table/filter-table';
 
 @Component({
   selector: 'app-page',
-  imports: [CommonModule, FormsModule, ListTable, FormModal],
+  imports: [CommonModule, FormsModule, ListTable, FormModal, FilterTable],
   templateUrl: './page.html',
   styleUrl: './page.css',
 })
@@ -47,6 +48,11 @@ export class Page {
     effect(() => {
       const currentParams = this.params();
       this.loadRoles(currentParams);
+    });
+    effect(() => {
+      if (this.isOpenModal() === false) {
+        this.record.set(null);
+      }
     });
   }
 
