@@ -6,6 +6,7 @@ import { ListTable } from '../component/list-table/list-table';
 import { FormsModule } from '@angular/forms';
 import { Data } from '../../../models/base.model';
 import { FormModal } from '../component/form-modal/form-modal';
+import { Permission } from '../../../models/permission.model';
 
 @Component({
   selector: 'app-page',
@@ -39,11 +40,32 @@ export class Page {
     sortType: 'DESC',
     permissions: '',
   });
+  listPermission: Permission[] | [] = [];
 
   constructor() {
+    this.getListPermission();
     effect(() => {
       const currentParams = this.params();
       this.loadRoles(currentParams);
+    });
+  }
+
+  getListPermission() {
+    const params = {
+      name: '',
+      action: '1',
+      page: 0,
+      size: 9999,
+      sortBy: 'createdAt',
+      sortType: 'DESC',
+    };
+    this.roleService.getListPermissionAction(params).subscribe({
+      next: (res) => {
+        this.listPermission = res.result?.data ?? [];
+      },
+      error: (err) => {
+        console.log('err: ', err);
+      },
     });
   }
 

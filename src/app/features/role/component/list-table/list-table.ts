@@ -131,7 +131,8 @@ export class ListTable implements OnChanges {
     this.openModalChange.emit(true);
     this.roleService.getDetail(row.id).subscribe({
       next: (res) => {
-        this.onRecordChange.emit(res?.result ?? null);
+        const addEdit = res?.result ? { ...res?.result, edit: true } : null;
+        this.onRecordChange.emit(addEdit);
       },
       error: (err) => {
         console.log('err: ', err);
@@ -143,7 +144,8 @@ export class ListTable implements OnChanges {
     this.openModalChange.emit(true);
     this.roleService.getDetail(row.id).subscribe({
       next: (res) => {
-        this.onRecordChange.emit(res?.result ?? null);
+        const addEdit = res?.result ? { ...res?.result, edit: false } : null;
+        this.onRecordChange.emit(addEdit);
       },
       error: (err) => {
         console.log('err: ', err);

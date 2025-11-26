@@ -1,30 +1,31 @@
 <ng-template #dialogTemplate>
-  <h2 mat-dialog-title>{{ record() ? 'Chỉnh sửa' : 'Thêm mới' }} Role</h2>
+  <h2 mat-dialog-title>
+    {{ record() ? (record()?.edit ? 'Chỉnh sửa' : 'Xem chi tiết') : 'Thêm mới' }} vai trò
+  </h2>
   <mat-dialog-content>
-    <form [formGroup]="roleForm" class="form-container">
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Tên</mat-label>
-        <input matInput formControlName="name" placeholder="Nhập tên role" autocomplete="off" />
+    <form [formGroup]="roleForm">
+      <mat-label>Tên *</mat-label>
+      <mat-form-field>
+        <input matInput formControlName="name" placeholder="Nhập tên" maxlength="100" />
         <mat-error *ngIf="roleForm.get('name')?.invalid">
           {{ getErrorMessage('name') }}
         </mat-error>
       </mat-form-field>
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Mô tả</mat-label>
+      <mat-label>Mô tả</mat-label>
+      <mat-form-field>
         <textarea
           matInput
           formControlName="description"
           placeholder="Nhập mô tả"
-          rows="4"
-          autocomplete="off"
+          maxlength="255"
         ></textarea>
         <mat-error *ngIf="roleForm.get('description')?.invalid">
           {{ getErrorMessage('description') }}
         </mat-error>
       </mat-form-field>
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Hành động</mat-label>
-        <mat-select formControlName="action" placeholder="Chọn hành động">
+      <mat-label>Trạng thái *</mat-label>
+      <mat-form-field>
+        <mat-select formControlName="action" placeholder="Chọn trạng thái">
           <mat-option *ngFor="let action of actions" [value]="action.value">
             {{ action.label }}
           </mat-option>
@@ -33,11 +34,30 @@
           {{ getErrorMessage('action') }}
         </mat-error>
       </mat-form-field>
+      <mat-label>Quyền thao tác *</mat-label>
+      <mat-form-field>
+        <mat-select formControlName="permissions" placeholder="Chọn các quyền thao tác" multiple>
+          <mat-option *ngFor="let listPermission of listPermissions" [value]="listPermission.id">
+            {{ listPermission.name }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="roleForm.get('permissions')?.invalid">
+          {{ getErrorMessage('permissions') }}
+        </mat-error>
+      </mat-form-field>
     </form>
   </mat-dialog-content>
   <mat-dialog-actions>
-    <button mat-button (click)="closeDialog()">Hủy</button>
-    <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="roleForm.invalid">
+    <button mat-button mat-dialog-close (click)="closeDialog()">
+      {{ record()?.edit === false ? 'Đóng' : 'Hủy' }}
+    </button>
+    <button
+      *ngIf="!record() || record()?.edit === true"
+      mat-raised-button
+      color="primary"
+      (click)="onSubmit()"
+      [disabled]="roleForm.invalid"
+    >
       {{ record() ? 'Cập nhật' : 'Thêm mới' }}
     </button>
   </mat-dialog-actions>

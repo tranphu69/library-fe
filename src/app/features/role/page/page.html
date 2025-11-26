@@ -12,6 +12,9 @@
   <app-form-modal
     [isOpen]="isOpenModal()"
     [record]="record()"
+    [params]="params()"
+    [listPermissions]="listPermission"
     (openModalChange)="onModalChange($event)"
+    (paramsChange)="onParamsChange($event)"
   ></app-form-modal>
 </div>

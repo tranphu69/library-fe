@@ -1,19 +1,7 @@
-.form-container {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  padding: 20px 0;
+textarea[formControlName="description"] {
+  height: 30px !important;
 }
 
-.full-width {
-  width: 100%;
-}
-
-mat-dialog-content {
-  min-height: 300px;
-}
-
-mat-dialog-actions {
-  padding: 16px 24px;
-  gap: 8px;
+.mat-mdc-dialog-actions {
+  justify-content: flex-end;
 }

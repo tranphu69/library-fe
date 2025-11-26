@@ -2,6 +2,7 @@ import {
   Component,
   inject,
   input,
+  Input,
   effect,
   Output,
   TemplateRef,
@@ -14,7 +15,11 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { Role } from '../../../../models/role.model';
+import { Role, ListRole } from '../../../../models/role.model';
+import { CommonModule } from '@angular/common';
+import { RoleService } from '../../service/role.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Permission } from '../../../../models/permission.model';
 
 @Component({
   selector: 'app-form-modal',
@@ -26,6 +31,7 @@ import { Role } from '../../../../models/role.model';
     MatInputModule,
     MatSelectModule,
     ReactiveFormsModule,
+    CommonModule,
   ],
   templateUrl: './form-modal.html',
   styleUrl: './form-modal.css',
@@ -34,10 +40,14 @@ export class FormModal {
   private dialog = inject(MatDialog);
   private fb = inject(FormBuilder);
   private dialogRef: MatDialogRef<any> | null = null;
+  private roleService = inject(RoleService);
 
   dialogTemplate = viewChild<TemplateRef<any>>('dialogTemplate');
   isOpen = input<boolean>(false);
   record = input<Role | null>(null);
+  @Input() listPermissions: Permission[] = [];
+  @Input() params!: ListRole;
+  @Output() paramsChange = new EventEmitter<ListRole>();
   @Output() openModalChange = new EventEmitter<boolean>();
   @Output() formSubmit = new EventEmitter<Role>();
   roleForm: FormGroup;
@@ -46,37 +56,52 @@ export class FormModal {
     { value: 1, label: 'Hoạt động' },
   ];
 
-  constructor() {
+  constructor(private snackBar: MatSnackBar) {
     this.roleForm = this.fb.group({
-      name: ['', [Validators.required, Validators.minLength(3)]],
-      description: ['', [Validators.required, Validators.minLength(10)]],
+      name: ['', [Validators.required, Validators.maxLength(100)]],
+      description: ['', [Validators.maxLength(255)]],
       action: ['', Validators.required],
+      permissions: ['', Validators.required],
     });
     effect(() => {
       const template = this.dialogTemplate();
-      const recordData = this.record();
-      if (this.isOpen() && template && !this.dialogRef) {
-        if (recordData) {
-          this.roleForm.patchValue({
-            name: recordData.name,
-            description: recordData.description,
-            action: recordData.action,
-          });
-        } else {
-          this.roleForm.reset();
-        }
+      const isOpen = this.isOpen();
+      if (isOpen && template && !this.dialogRef) {
         this.dialogRef = this.dialog.open(template, {
           width: '500px',
           disableClose: true,
         });
         this.dialogRef.afterClosed().subscribe(() => {
           this.dialogRef = null;
-          this.openModalChange.emit(false);
           this.roleForm.reset();
+          this.roleForm.enable();
+          this.openModalChange.emit(false);
         });
-      } else if (!this.isOpen() && this.dialogRef) {
+      } else if (!isOpen && this.dialogRef) {
         this.dialogRef.close();
         this.dialogRef = null;
+        this.roleForm.reset();
+        this.roleForm.enable();
+      }
+    });
+    effect(() => {
+      const recordData = this.record();
+      const arrayIdPermissions = this.record()?.permissions?.map((item) => item.id) ?? [];
+      const isOpen = this.isOpen();
+      if (isOpen && this.dialogRef) {
+        this.roleForm.reset();
+        this.roleForm.enable();
+        if (recordData) {
+          this.roleForm.patchValue({
+            name: recordData.name,
+            description: recordData.description,
+            action: recordData.action,
+            permissions: arrayIdPermissions,
+          });
+          if (recordData.edit === false) {
+            this.roleForm.disable();
+          }
+        }
       }
     });
   }
@@ -93,8 +118,26 @@ export class FormModal {
   onSubmit() {
     if (this.roleForm.valid) {
       const formValue = this.roleForm.value;
-      this.formSubmit.emit(formValue);
-      this.closeDialog();
+      console.log('formValue', formValue);
+      this.roleService.putEdit(formValue, this.record()?.id).subscribe({
+        next: (res) => {
+          this.closeDialog();
+          this.snackBar.open('Cập nhật thành công!', 'Đóng', {
+            duration: 3000,
+            horizontalPosition: 'left',
+            verticalPosition: 'top',
+          });
+          this.paramsChange.emit({ ...this.params });
+        },
+        error: (err) => {
+          console.log('err: ', err);
+          this.snackBar.open('Cập nhật không thành công!', 'Đóng', {
+            duration: 3000,
+            horizontalPosition: 'left',
+            verticalPosition: 'top',
+          });
+        },
+      });
     } else {
       Object.keys(this.roleForm.controls).forEach((key) => {
         this.roleForm.get(key)?.markAsTouched();
