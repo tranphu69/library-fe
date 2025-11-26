@@ -64,7 +64,6 @@ export class FormModal {
       permissions: ['', Validators.required],
     });
     effect(() => {
-      console.log('record', this.record());
       const template = this.dialogTemplate();
       const isOpen = this.isOpen();
       if (isOpen && template && !this.dialogRef) {

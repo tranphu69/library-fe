@@ -34,4 +34,10 @@ export class RoleService {
   postCreate(params?: RoleEditCreate): Observable<string> {
     return this.apiService.post<string>('role', params);
   }
+
+  postExport(params?: ListRole): Observable<Blob> {
+    return this.apiService.postExport<Blob>('role/export', params, {
+      responseType: 'blob',
+    });
+  }
 }

@@ -26,4 +26,8 @@ export class ApiService {
   delete<T>(endpoint: string): Observable<T> {
     return this.http.delete<T>(`${this.baseUrl}/${endpoint}`);
   }
+
+  postExport<T>(endpoint: string, data?: any, options?: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/${endpoint}`, data, options);
+  }
 }
