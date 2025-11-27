@@ -8,15 +8,17 @@ import { Data } from '../../../models/base.model';
 import { FormModal } from '../component/form-modal/form-modal';
 import { Permission } from '../../../models/permission.model';
 import { FilterTable } from '../component/filter-table/filter-table';
+import { ImportModal } from '../component/import-modal/import-modal';
 
 @Component({
   selector: 'app-page',
-  imports: [CommonModule, FormsModule, ListTable, FormModal, FilterTable],
+  imports: [CommonModule, FormsModule, ListTable, FormModal, FilterTable, ImportModal],
   templateUrl: './page.html',
   styleUrl: './page.css',
 })
 export class Page {
   private roleService = inject(RoleService);
+
   columnConfig = [
     { key: 'index', label: '#', width: 50, sortable: false },
     { key: 'name', label: 'Tên', width: 160, sortable: true },
@@ -31,6 +33,7 @@ export class Page {
   data = signal<Data<Role>>({});
   isLoading = signal(true);
   isOpenModal = signal(false);
+  isOpenImport = signal(false);
   record = signal<Role | null>(null);
   params = signal<ListRole>({
     name: '',
@@ -92,6 +95,11 @@ export class Page {
   onModalChange(value: boolean | Event) {
     const newValue = typeof value === 'boolean' ? value : false;
     this.isOpenModal.set(newValue);
+  }
+
+  onModalChangeImport(value: boolean | Event) {
+    const newValue = typeof value === 'boolean' ? value : false;
+    this.isOpenImport.set(newValue);
   }
 
   onRecordChange(newRecord: Role | null) {

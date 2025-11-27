@@ -1,0 +1,17 @@
+<ng-template #dialogTemplate>
+  <h2 mat-dialog-title>Tải lên danh sách vai trò</h2>
+  <mat-divider></mat-divider>
+  <mat-dialog-content>
+    <div class="flex-between">
+      <div class="font-bold">Tải lên</div>
+      <div class="color-text font-bold" (click)="downloadTemplate()">
+        <img src="assets/icons/file-search.svg" alt="Upload icon" width="24" height="24" />
+        File mẫu
+      </div>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button mat-button mat-dialog-close (click)="closeDialog()">Hủy</button>
+    <button mat-raised-button color="primary">Tải lên</button>
+  </mat-dialog-actions>
+</ng-template>

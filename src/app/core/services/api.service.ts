@@ -15,6 +15,12 @@ export class ApiService {
     return this.http.get<T>(`${this.baseUrl}/${endpoint}`, { params });
   }
 
+  getTemplate(endpoint: string): Observable<Blob> {
+    return this.http.get(`${this.baseUrl}/${endpoint}`, {
+      responseType: 'blob',
+    });
+  }
+
   post<T>(endpoint: string, data: any): Observable<T> {
     return this.http.post<T>(`${this.baseUrl}/${endpoint}`, data);
   }

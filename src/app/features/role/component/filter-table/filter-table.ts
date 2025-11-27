@@ -13,6 +13,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class FilterTable {
   private roleService = inject(RoleService);
 
+  @Output() onModalChangeImport = new EventEmitter<boolean>();
   @Output() openModalChange = new EventEmitter<boolean>();
   @Input() params!: ListRole;
 
@@ -22,13 +23,17 @@ export class FilterTable {
     this.openModalChange.emit(true);
   }
 
+  onOpenImport() {
+    this.onModalChangeImport.emit(true);
+  }
+
   onExport() {
     this.roleService.postExport(this.params).subscribe({
       next: (blob: Blob) => {
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = 'roles.xlsx';
+        a.download = 'ds_roles.xlsx';
         a.click();
         URL.revokeObjectURL(url);
         this.snackBar.open('Tải xuống thành công!', 'Đóng', {

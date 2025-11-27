@@ -1,5 +1,9 @@
 <div class="container">
-  <app-filter-table (openModalChange)="onModalChange($event)" [params]="params()">
+  <app-filter-table
+    (openModalChange)="onModalChange($event)"
+    [params]="params()"
+    (onModalChangeImport)="onModalChangeImport($event)"
+  >
   </app-filter-table>
   <app-list-table
     [loading]="isLoading()"
@@ -19,4 +23,8 @@
     (openModalChange)="onModalChange($event)"
     (paramsChange)="onParamsChange($event)"
   ></app-form-modal>
+  <app-import-modal
+    (onModalChangeImport)="onModalChangeImport($event)"
+    [isOpenImport]="isOpenImport()"
+  ></app-import-modal>
 </div>

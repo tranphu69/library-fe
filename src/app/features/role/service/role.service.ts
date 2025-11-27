@@ -40,4 +40,8 @@ export class RoleService {
       responseType: 'blob',
     });
   }
+
+  getTemplate(): Observable<Blob> {
+    return this.apiService.getTemplate('role/template-file');
+  }
 }
