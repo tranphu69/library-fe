@@ -26,6 +26,7 @@
     border-radius: 8px;
     border: 1px solid #D0D5DD;
     background-color: #FFFFFF;
+    overflow: auto;
 }
 
 /* Overlay khi sidebar mở trên mobile */

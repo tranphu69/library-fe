@@ -4,6 +4,7 @@ import { ApiService } from '../../../core/services/api.service';
 import { Data, DataDetail } from '../../../models/base.model';
 import { ListRole, Role, RoleEditCreate } from '../../../models/role.model';
 import { ListPermission, Permission } from '../../../models/permission.model';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -43,5 +44,11 @@ export class RoleService {
 
   getTemplate(): Observable<Blob> {
     return this.apiService.getTemplate('role/template-file');
+  }
+
+  getAutoSearch(params?: string): Observable<any> {
+    return this.apiService
+      .get<any>('role/auto-search', { keyword: params })
+      .pipe(map((response) => response.result || []));
   }
 }

@@ -1,7 +1,9 @@
 <div class="container">
   <app-filter-table
     (openModalChange)="onModalChange($event)"
+    [listPermissions]="listPermission"
     [params]="params()"
+    (paramsChange)="onParamsChange($event)"
     (onModalChangeImport)="onModalChangeImport($event)"
   >
   </app-filter-table>

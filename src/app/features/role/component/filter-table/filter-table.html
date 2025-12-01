@@ -1,5 +1,35 @@
 <div class="container">
-  <div>Khu vực của phần filter</div>
+  <form [formGroup]="roleFormFilter">
+    <mat-form-field>
+      <input
+        matInput
+        formControlName="name"
+        [matAutocomplete]="auto"
+        placeholder="Nhập tên"
+        maxlength="100"
+      />
+      <mat-autocomplete #auto="matAutocomplete">
+        <mat-option *ngFor="let item of suggestions$ | async" [value]="item">
+          {{ item }}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-select formControlName="action" placeholder="Chọn trạng thái">
+        <mat-option *ngFor="let action of actions" [value]="action.value">
+          {{ action.label }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-select formControlName="permissions" placeholder="Chọn các quyền thao tác" multiple>
+        <mat-option *ngFor="let listPermission of listPermissions" [value]="listPermission.id">
+          {{ listPermission.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <button matButton class="btn-new btn-red" (click)="onFilter()">Tìm kiếm</button>
+  </form>
   <div class="action">
     <button matButton class="btn-new" (click)="onExport()">
       <img src="assets/icons/download-cloud.svg" alt="Download icon" width="24" height="24" />
