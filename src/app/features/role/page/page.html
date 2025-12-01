@@ -3,6 +3,7 @@
     (openModalChange)="onModalChange($event)"
     [listPermissions]="listPermission"
     [params]="params()"
+    [listSelect]="listSelect()"
     (paramsChange)="onParamsChange($event)"
     (onModalChangeImport)="onModalChangeImport($event)"
   >
@@ -14,6 +15,7 @@
     [params]="params()"
     (paramsChange)="onParamsChange($event)"
     (openModalChange)="onModalChange($event)"
+    (selectionChange)="onSelectionChange($event)"
     (onRecordChange)="onRecordChange($event)"
   >
   </app-list-table>

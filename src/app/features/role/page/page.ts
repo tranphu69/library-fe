@@ -45,6 +45,7 @@ export class Page {
     permissions: '',
   });
   listPermission: Permission[] | [] = [];
+  listSelect = signal<any[]>([]);
 
   constructor() {
     this.getListPermission();
@@ -108,5 +109,14 @@ export class Page {
 
   onParamsChange(newParams: ListRole) {
     this.params.set(newParams);
+  }
+
+  onSelectionChange(selectedRows: any[]) {
+    console.log('Selected rows:', selectedRows);
+    if (selectedRows.length > 0) {
+      this.listSelect.set(selectedRows);
+    } else {
+      this.listSelect.set([]);
+    }
   }
 }

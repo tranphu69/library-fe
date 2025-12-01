@@ -31,6 +31,9 @@
     <button matButton class="btn-new btn-red" (click)="onFilter()">Tìm kiếm</button>
   </form>
   <div class="action">
+    <button *ngIf="listSelect.length > 0" matButton class="btn-new btn-red" (click)="onDelete()">
+      Xóa
+    </button>
     <button matButton class="btn-new" (click)="onExport()">
       <img src="assets/icons/download-cloud.svg" alt="Download icon" width="24" height="24" />
       Tải xuống

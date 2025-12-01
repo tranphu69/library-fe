@@ -23,6 +23,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { RoleService } from '../../service/role.service';
+import { SelectionModel } from '@angular/cdk/collections';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @Component({
   selector: 'app-list-table',
@@ -37,6 +39,7 @@ import { RoleService } from '../../service/role.service';
     MatMenuModule,
     MatIconModule,
     MatButtonModule,
+    MatCheckboxModule,
   ],
   providers: [DatePipe],
   templateUrl: './list-table.html',
@@ -70,6 +73,8 @@ export class ListTable implements OnChanges {
   @Output() paramsChange = new EventEmitter<ListRole>();
   @Output() openModalChange = new EventEmitter<boolean>();
   @Output() onRecordChange = new EventEmitter<Role | null>();
+  selection = new SelectionModel<any>(true, []);
+  @Output() selectionChange = new EventEmitter<any[]>();
 
   constructor(private datePipe: DatePipe, private snackBar: MatSnackBar) {}
 
@@ -80,7 +85,15 @@ export class ListTable implements OnChanges {
   }
 
   private updateDisplayedColumns(): void {
-    this.displayedColumns = [...(this.columnConfig?.map((col) => col.key) ?? []), 'actions'];
+    this.displayedColumns = [
+      'select',
+      ...(this.columnConfig?.map((col) => col.key) ?? []),
+      'actions',
+    ];
+  }
+
+  private emitSelectionChange() {
+    this.selectionChange.emit(this.selection.selected);
   }
 
   private transformData(): void {
@@ -94,6 +107,7 @@ export class ListTable implements OnChanges {
         updatedAt: this.datePipe.transform(item.updatedAt, 'dd/MM/yyyy HH:mm:ss'),
       })) ?? [];
     this.matDataSource.data = transformedData;
+    this.selection.clear();
   }
 
   getColumnLabel(key: string): string {
@@ -125,6 +139,26 @@ export class ListTable implements OnChanges {
       };
     }
     this.paramsChange.emit(updatedParams);
+  }
+
+  isAllSelected() {
+    const numSelected = this.selection.selected.length;
+    const numRows = this.matDataSource.data.length;
+    return numSelected === numRows;
+  }
+
+  toggleAllRows() {
+    if (this.isAllSelected()) {
+      this.selection.clear();
+    } else {
+      this.matDataSource.data.forEach((row) => this.selection.select(row.id));
+    }
+    this.emitSelectionChange();
+  }
+
+  toggleRow(row: any) {
+    this.selection.toggle(row.id);
+    this.emitSelectionChange();
   }
 
   onEdit(row: any) {

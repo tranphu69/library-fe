@@ -37,6 +37,7 @@ export class FilterTable {
   @Output() openModalChange = new EventEmitter<boolean>();
   @Output() paramsChange = new EventEmitter<ListRole>();
   @Input() params!: ListRole;
+  @Input() listSelect!: any[];
   roleFormFilter: FormGroup;
   actions = [
     { value: 0, label: 'Không hoạt động' },
@@ -79,6 +80,31 @@ export class FilterTable {
 
   onCreate() {
     this.openModalChange.emit(true);
+  }
+
+  onDelete() {
+    this.roleService.postListDeletes(this.listSelect ?? []).subscribe({
+      next: (res) => {
+        this.snackBar.open('Xóa thành công!', 'Đóng', {
+          duration: 3000,
+          horizontalPosition: 'left',
+          verticalPosition: 'top',
+        });
+        this.paramsChange.emit({
+          ...this.params,
+          sortBy: 'createdAt',
+          sortType: 'DESC',
+        });
+      },
+      error: (err) => {
+        console.log('err: ', err);
+        this.snackBar.open('Xóa không thành công!', 'Đóng', {
+          duration: 3000,
+          horizontalPosition: 'left',
+          verticalPosition: 'top',
+        });
+      },
+    });
   }
 
   onOpenImport() {
