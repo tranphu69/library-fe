@@ -151,13 +151,13 @@ export class ListTable implements OnChanges {
     if (this.isAllSelected()) {
       this.selection.clear();
     } else {
-      this.matDataSource.data.forEach((row) => this.selection.select(row.id));
+      this.matDataSource.data.forEach((row) => this.selection.select(row));
     }
     this.emitSelectionChange();
   }
 
   toggleRow(row: any) {
-    this.selection.toggle(row.id);
+    this.selection.toggle(row);
     this.emitSelectionChange();
   }
 
