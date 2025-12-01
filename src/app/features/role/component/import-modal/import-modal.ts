@@ -31,6 +31,8 @@ export class ImportModal {
   dialogTemplate = viewChild<TemplateRef<any>>('dialogTemplate');
   isOpenImport = input<boolean>(false);
 
+  selectedFile: File | null = null;
+
   constructor(private snackBar: MatSnackBar) {
     effect(() => {
       const template = this.dialogTemplate();
@@ -43,11 +45,42 @@ export class ImportModal {
         this.dialogRef.afterClosed().subscribe(() => {
           this.dialogRef = null;
           this.onModalChangeImport.emit(false);
+          this.selectedFile = null;
         });
       } else if (!isOpen && this.dialogRef) {
         this.dialogRef.close();
         this.dialogRef = null;
       }
+    });
+  }
+
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (!file) return;
+    this.selectedFile = file;
+  }
+
+  uploadFile() {
+    if (!this.selectedFile) return;
+    const formData = new FormData();
+    formData.append('file', this.selectedFile);
+    this.roleService.postImport(formData).subscribe({
+      next: () => {
+        this.snackBar.open('Tải lên thành công!', 'Đóng', {
+          duration: 3000,
+          horizontalPosition: 'left',
+          verticalPosition: 'top',
+        });
+        this.closeDialog();
+      },
+      error: (err) => {
+        console.log('err: ', err);
+        this.snackBar.open('Tải lên thất bại!', 'Đóng', {
+          duration: 3000,
+          horizontalPosition: 'left',
+          verticalPosition: 'top',
+        });
+      },
     });
   }
 
@@ -83,5 +116,6 @@ export class ImportModal {
       this.dialogRef = null;
     }
     this.onModalChangeImport.emit(false);
+    this.selectedFile = null;
   }
 }

@@ -9,9 +9,17 @@
         File mẫu
       </div>
     </div>
+    <div class="upload-wrapper">
+      <button mat-stroked-button color="primary" (click)="fileInput.click()">Chọn file</button>
+      <input #fileInput type="file" hidden accept=".xlsx,.xls" (change)="onFileSelected($event)" />
+
+      <div class="file-name" *ngIf="selectedFile">
+        {{ selectedFile.name }}
+      </div>
+    </div>
   </mat-dialog-content>
   <mat-dialog-actions>
     <button mat-button mat-dialog-close (click)="closeDialog()">Hủy</button>
-    <button mat-raised-button color="primary">Tải lên</button>
+    <button mat-raised-button color="primary" (click)="uploadFile()">Tải lên</button>
   </mat-dialog-actions>
 </ng-template>

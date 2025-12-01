@@ -42,6 +42,10 @@ export class RoleService {
     });
   }
 
+  postImport(formData: FormData) {
+    return this.apiService.post('role/import', formData);
+  }
+
   getTemplate(): Observable<Blob> {
     return this.apiService.getTemplate('role/template-file');
   }
