@@ -12,6 +12,7 @@ import { Permission } from '../../../../models/permission.model';
 import { Observable } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { BaseInput } from '../../../../shared/components/base-input/base-input';
 
 @Component({
   selector: 'app-filter-table',
@@ -23,6 +24,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
     MatInputModule,
     MatSelectModule,
     MatAutocompleteModule,
+    BaseInput,
   ],
   templateUrl: './filter-table.html',
   styleUrl: './filter-table.css',

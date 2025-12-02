@@ -1,19 +1,20 @@
 <div class="container">
   <form [formGroup]="roleFormFilter">
-    <mat-form-field>
-      <input
-        matInput
-        formControlName="name"
-        [matAutocomplete]="auto"
-        placeholder="Nhập tên"
+    <div>
+      <app-base-input
         maxlength="100"
-      />
+        formControlName="name"
+        placeholder="Nhập tên vai trò"
+        [matAutocomplete]="auto"
+        label="Tên vai trò"
+      >
+      </app-base-input>
       <mat-autocomplete #auto="matAutocomplete">
         <mat-option *ngFor="let item of suggestions$ | async" [value]="item">
           {{ item }}
         </mat-option>
       </mat-autocomplete>
-    </mat-form-field>
+    </div>
     <mat-form-field>
       <mat-select formControlName="action" placeholder="Chọn trạng thái">
         <mat-option *ngFor="let action of actions" [value]="action.value">

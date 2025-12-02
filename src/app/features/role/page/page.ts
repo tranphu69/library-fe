@@ -112,7 +112,6 @@ export class Page {
   }
 
   onSelectionChange(selectedRows: any[]) {
-    console.log('Selected rows:', selectedRows);
     if (selectedRows.length > 0) {
       this.listSelect.set(selectedRows.map((item) => item.id));
     } else {
