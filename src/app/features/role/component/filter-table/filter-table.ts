@@ -68,11 +68,10 @@ export class FilterTable {
 
   onFilter() {
     const formValue = this.roleFormFilter.value;
-    console.log('formValue', formValue);
     const updatedParams = {
       ...this.params,
       name: formValue?.name.trim() ?? '',
-      permissions: formValue?.permissions.length ? formValue?.permissions : '',
+      permissions: formValue?.permissions.length ? formValue?.permissions?.join(',') : '',
       action: formValue?.action ?? '',
     };
     this.paramsChange.emit(updatedParams);
@@ -83,7 +82,7 @@ export class FilterTable {
   }
 
   onDelete() {
-    this.roleService.postListDeletes(this.listSelect ?? []).subscribe({
+    this.roleService.postListDeletes(this.listSelect).subscribe({
       next: (res) => {
         this.snackBar.open('Xóa thành công!', 'Đóng', {
           duration: 3000,
@@ -112,28 +111,34 @@ export class FilterTable {
   }
 
   onExport() {
-    this.roleService.postExport(this.params).subscribe({
-      next: (blob: Blob) => {
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'ds_roles.xlsx';
-        a.click();
-        URL.revokeObjectURL(url);
-        this.snackBar.open('Tải xuống thành công!', 'Đóng', {
-          duration: 3000,
-          horizontalPosition: 'left',
-          verticalPosition: 'top',
-        });
-      },
-      error: (err) => {
-        console.log('err: ', err);
-        this.snackBar.open('Tải xuống không thành công!', 'Đóng', {
-          duration: 3000,
-          horizontalPosition: 'left',
-          verticalPosition: 'top',
-        });
-      },
-    });
+    this.roleService
+      .postExport(
+        this.listSelect.length > 0
+          ? { ...this.params, ids: this.listSelect.join(',') }
+          : this.params
+      )
+      .subscribe({
+        next: (blob: Blob) => {
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = 'ds_roles.xlsx';
+          a.click();
+          URL.revokeObjectURL(url);
+          this.snackBar.open('Tải xuống thành công!', 'Đóng', {
+            duration: 3000,
+            horizontalPosition: 'left',
+            verticalPosition: 'top',
+          });
+        },
+        error: (err) => {
+          console.log('err: ', err);
+          this.snackBar.open('Tải xuống không thành công!', 'Đóng', {
+            duration: 3000,
+            horizontalPosition: 'left',
+            verticalPosition: 'top',
+          });
+        },
+      });
   }
 }

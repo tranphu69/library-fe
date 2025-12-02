@@ -8,6 +8,7 @@ export interface ListRole {
   sortBy?: string | null;
   sortType?: string | null;
   permissions?: string;
+  ids?: string | null;
 }
 
 export interface RoleEditCreate {
