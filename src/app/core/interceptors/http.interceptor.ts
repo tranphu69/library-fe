@@ -15,7 +15,7 @@ export class HttpErrorInterceptor implements HttpInterceptor {
     // Thêm token vào header nếu có
     //const token = localStorage.getItem('access_token');
     const token =
-      'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbIlJPTEVfUk9MRV9NQU5BR0VNRU5UIiwiUk9MRV9QRVJNSVNTSU9OX01BTkFHRU1FTlQiLCJST0xFX1VTRVJfTUFOQUdFTUVOVCJdLCJpYXQiOjE3NjQ2NDE3MzEsImV4cCI6MTc2NDY3MTczMX0.Acfm7cVkXhnvyFZH1-4x4dzdDC4bc_HGm_XtW4Igj5Q';
+      'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbIlJPTEVfUk9MRV9NQU5BR0VNRU5UIiwiUk9MRV9QRVJNSVNTSU9OX01BTkFHRU1FTlQiLCJST0xFX1VTRVJfTUFOQUdFTUVOVCJdLCJpYXQiOjE3NjQ3MzA2MzEsImV4cCI6MTc2NDc2MDYzMX0.5RgK8IngjTs7Zwuhgp7SvgTxJawllGaeZ9VXOQ2npk8';
 
     if (token) {
       req = req.clone({

@@ -42,7 +42,17 @@ export interface SelectOption {
         (clickOutside)="showDropdown = false"
         (click)="open()"
         (blur)="onTouched()"
-      />
+      >
+        @if (multiple()) {
+        <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+          <div class="ng-value-container-custom">
+            @for (item of items; track item; let isLast = $last) {
+            <span class="ng-value-label">{{ item[bindLabel()] }}@if (!isLast) {, }</span>
+            }
+          </div>
+        </ng-template>
+        }
+      </ng-select>
     </div>
   `,
   styles: [
@@ -61,12 +71,8 @@ export interface SelectOption {
         margin-left: 10px;
         margin-bottom: 5px;
       }
-      ::ng-deepdeep
-        .ng-select.ng-select-single
-        .ng-select-container
-        .ng-value-container
-        .ng-placeholder {
-        display: none;
+      ::ng-deep .ng-select.ng-select-multiple .ng-select-container.ng-has-value .ng-placeholder {
+        display: none !important;
       }
       ::ng-deep .ng-select.ng-select-single .ng-select-container.ng-has-value .ng-placeholder {
         display: none !important;
@@ -75,13 +81,28 @@ export interface SelectOption {
         border: 1px solid;
         border-color: #d0d5dd !important;
         border-radius: 12px;
-        height: 44px;
+        min-height: 44px;
+        height: auto;
         padding: 10px 14px;
         opacity: 1 !important;
       }
       ::ng-deep .ng-select .ng-select-container .ng-value-container .ng-placeholder {
         color: #757575 !important;
         opacity: 1 !important;
+      }
+      :host ::ng-deep .ng-value-container-custom {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0;
+      }
+      :host ::ng-deep .ng-value-label {
+        color: #344054;
+        font-size: 14px;
+        line-height: 20px;
+      }
+      :host ::ng-deep .ng-select.ng-select-multiple .ng-value-container .ng-value {
+        display: none;
       }
       :host ::ng-deep .ng-dropdown-panel {
         background-color: #ffffff !important;
@@ -92,14 +113,11 @@ export interface SelectOption {
         margin-top: 8px !important;
         overflow: hidden !important;
       }
-
-      /* Dropdown items wrapper */
       :host ::ng-deep .ng-dropdown-panel .ng-dropdown-panel-items {
         max-height: 280px !important;
         padding: 8px !important;
         background-color: #ffffff !important;
       }
-      /* Individual option */
       :host ::ng-deep .ng-dropdown-panel .ng-dropdown-panel-items .ng-option {
         padding: 10px 14px !important;
         font-size: 14px !important;
@@ -111,26 +129,22 @@ export interface SelectOption {
         cursor: pointer !important;
         transition: all 0.15s ease !important;
       }
-      /* Option hover */
       :host ::ng-deep .ng-dropdown-panel .ng-dropdown-panel-items .ng-option:hover,
       :host ::ng-deep .ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-marked {
         background-color: gray !important;
         color: #fff !important;
       }
-      /* Option selected */
       :host ::ng-deep .ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-selected {
         background-color: #eff8ff !important;
         color: #1570ef !important;
         font-weight: 500 !important;
       }
-      /* Option disabled */
       :host ::ng-deep .ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-disabled {
         color: #98a2b3 !important;
         background-color: #ffffff !important;
         cursor: not-allowed !important;
         opacity: 0.5 !important;
       }
-      /* Custom scrollbar */
       :host ::ng-deep .ng-dropdown-panel .ng-dropdown-panel-items::-webkit-scrollbar {
         width: 6px !important;
       }
@@ -164,7 +178,7 @@ export class BaseSelect implements ControlValueAccessor, OnInit {
   multiple = input<boolean>(false);
   bindLabel = input<string>('label');
   bindValue = input<string>('value');
-  containerClass = input<string>('w-full');
+  containerClass = input<string>('');
   iconCheck = input<boolean>(false);
   showDropdown: boolean = false;
   value: any = null;

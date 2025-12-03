@@ -44,7 +44,7 @@ export class Page {
     sortType: 'DESC',
     permissions: '',
   });
-  listPermission: Permission[] | [] = [];
+  listPermission: any[] | [] = [];
   listSelect = signal<any[]>([]);
 
   constructor() {
@@ -71,7 +71,8 @@ export class Page {
     };
     this.roleService.getListPermissionAction(params).subscribe({
       next: (res) => {
-        this.listPermission = res.result?.data ?? [];
+        this.listPermission =
+          res.result?.data?.map((item) => ({ label: item.name, value: item.id })) ?? [];
       },
       error: (err) => {
         console.log('err: ', err);

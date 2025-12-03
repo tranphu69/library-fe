@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, Input, inject } from '@angular/core';
+import { Component, Output, EventEmitter, Input, inject, computed } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { ListRole } from '../../../../models/role.model';
 import { RoleService } from '../../service/role.service';
@@ -36,7 +36,7 @@ export class FilterTable {
   private fb = inject(FormBuilder);
 
   suggestions$!: Observable<any[]>;
-  @Input() listPermissions: Permission[] = [];
+  @Input() listPermissions: any[] = [];
   @Output() onModalChangeImport = new EventEmitter<boolean>();
   @Output() openModalChange = new EventEmitter<boolean>();
   @Output() paramsChange = new EventEmitter<ListRole>();

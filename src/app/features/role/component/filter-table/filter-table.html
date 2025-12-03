@@ -22,19 +22,17 @@
         label="Trạng thái"
         [options]="actions"
       />
-      <!-- <mat-select formControlName="action" placeholder="Chọn trạng thái">
-        <mat-option *ngFor="let action of actions" [value]="action.value">
-          {{ action.label }}
-        </mat-option>
-      </mat-select> -->
     </div>
-    <mat-form-field>
-      <mat-select formControlName="permissions" placeholder="Chọn các quyền thao tác" multiple>
-        <mat-option *ngFor="let listPermission of listPermissions" [value]="listPermission.id">
-          {{ listPermission.name }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
+    <div>
+      <app-base-select
+        formControlName="permissions"
+        placeholder="Chọn các quyền thao tác"
+        label="Quyền thao tác"
+        [options]="listPermissions"
+        [multiple]="true"
+        [clearable]="true"
+      />
+    </div>
     <button matButton class="btn-new btn-red" (click)="onFilter()">Tìm kiếm</button>
   </form>
   <div class="action">
