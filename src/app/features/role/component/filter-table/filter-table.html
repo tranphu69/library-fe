@@ -1,39 +1,43 @@
 <div class="container">
-  <form [formGroup]="roleFormFilter">
-    <div>
-      <app-base-input
-        maxlength="100"
-        formControlName="name"
-        placeholder="Nhập tên vai trò"
-        [matAutocomplete]="auto"
-        label="Tên vai trò"
-      >
-      </app-base-input>
-      <mat-autocomplete #auto="matAutocomplete">
-        <mat-option *ngFor="let item of suggestions$ | async" [value]="item">
-          {{ item }}
-        </mat-option>
-      </mat-autocomplete>
+  <form [formGroup]="roleFormFilter" class="container-filter">
+    <div class="grid-container">
+      <div>
+        <app-base-input
+          maxlength="100"
+          formControlName="name"
+          placeholder="Nhập tên vai trò"
+          [matAutocomplete]="auto"
+          label="Tên vai trò"
+        >
+        </app-base-input>
+        <mat-autocomplete #auto="matAutocomplete">
+          <mat-option *ngFor="let item of suggestions$ | async" [value]="item">
+            {{ item }}
+          </mat-option>
+        </mat-autocomplete>
+      </div>
+      <div>
+        <app-base-select
+          formControlName="action"
+          placeholder="Chọn trạng thái"
+          label="Trạng thái"
+          [options]="actions"
+        />
+      </div>
+      <div>
+        <app-base-select
+          formControlName="permissions"
+          placeholder="Chọn các quyền thao tác"
+          label="Quyền thao tác"
+          [options]="listPermissions"
+          [multiple]="true"
+          [clearable]="true"
+        />
+      </div>
     </div>
-    <div>
-      <app-base-select
-        formControlName="action"
-        placeholder="Chọn trạng thái"
-        label="Trạng thái"
-        [options]="actions"
-      />
+    <div class="right-button">
+      <button matButton class="btn-new btn-red" (click)="onFilter()">Tìm kiếm</button>
     </div>
-    <div>
-      <app-base-select
-        formControlName="permissions"
-        placeholder="Chọn các quyền thao tác"
-        label="Quyền thao tác"
-        [options]="listPermissions"
-        [multiple]="true"
-        [clearable]="true"
-      />
-    </div>
-    <button matButton class="btn-new btn-red" (click)="onFilter()">Tìm kiếm</button>
   </form>
   <div class="action">
     <button *ngIf="listSelect.length > 0" matButton class="btn-new btn-red" (click)="onDelete()">

@@ -89,6 +89,12 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
         font-size: 12px;
         color: #475467;
       }
+      .style-input:hover:not(:disabled) {
+        border-color: rgba(204, 0, 51, 0.3);
+      }
+      .style-input:focus:not(:disabled) {
+        border-color: #cc0033;
+      }
     `,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,

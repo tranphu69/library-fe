@@ -1,11 +1,23 @@
 .table-wrapper {
   width: 100%;
   overflow: hidden;
+  border: 1px solid #D0D5DD;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  padding: 20px 0px;
+}
+
+.text-title-table {
+  margin-left: 20px;
+  margin-bottom: 5px;
+  font-size: 20px;
+  font-weight: 500;
 }
 
 .table-scroll {
   overflow-x: auto;
-  overflow-y: hidden;
+  overflow-y: auto;
+  max-height: 435px;
   width: 100%;
 }
 

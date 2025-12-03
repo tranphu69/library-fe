@@ -24,11 +24,11 @@ export class Page {
     { key: 'name', label: 'Tên', width: 160, sortable: true },
     { key: 'description', label: 'Mô tả', width: 200, sortable: false },
     { key: 'action', label: 'Trạng thái', width: 150, sortable: true },
-    { key: 'permissions', label: 'Các quyền thao tác', width: 240, sortable: false },
+    { key: 'permissions', label: 'Các quyền thao tác', width: 200, sortable: false },
     { key: 'createdAt', label: 'Ngày tạo', width: 180, sortable: true },
     { key: 'updatedAt', label: 'Ngày cập nhật', width: 180, sortable: true },
-    { key: 'createdBy', label: 'Người tạo', width: 160, sortable: true },
-    { key: 'updatedBy', label: 'Người cập nhật', width: 160, sortable: true },
+    { key: 'createdBy', label: 'Người tạo', width: 150, sortable: true },
+    { key: 'updatedBy', label: 'Người cập nhật', width: 150, sortable: true },
   ];
   data = signal<Data<Role>>({});
   isLoading = signal(true);
@@ -39,7 +39,7 @@ export class Page {
     name: '',
     action: '',
     page: 0,
-    size: 10,
+    size: 7,
     sortBy: 'createdAt',
     sortType: 'DESC',
     permissions: '',

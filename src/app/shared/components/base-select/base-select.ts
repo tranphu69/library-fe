@@ -36,18 +36,13 @@ export interface SelectOption {
         [disabled]="isDisabled"
         [(ngModel)]="value"
         (ngModelChange)="onModelChange($event)"
-        (open)="showDropdown = true"
-        (close)="showDropdown = false"
-        [isOpen]="showDropdown"
-        (clickOutside)="showDropdown = false"
-        (click)="open()"
         (blur)="onTouched()"
       >
         @if (multiple()) {
         <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
           <div class="ng-value-container-custom">
-            @for (item of items; track item; let isLast = $last) {
-            <span class="ng-value-label">{{ item[bindLabel()] }}@if (!isLast) {, }</span>
+            @for (item of items; track item;) {
+            <span class="ng-value-label">{{ item[bindLabel()] }}</span>
             }
           </div>
         </ng-template>
@@ -77,14 +72,24 @@ export interface SelectOption {
       ::ng-deep .ng-select.ng-select-single .ng-select-container.ng-has-value .ng-placeholder {
         display: none !important;
       }
-      :host ::ng-deep .ng-select .ng-select-container {
+      ::ng-deep .ng-select .ng-select-container {
         border: 1px solid;
         border-color: #d0d5dd !important;
         border-radius: 12px;
-        min-height: 44px;
-        height: auto;
+        min-height: 44px !important;
+        height: auto !important;
         padding: 10px 14px;
         opacity: 1 !important;
+      }
+      :host ::ng-deep .ng-select .ng-select-container .ng-value-container {
+        height: auto !important;
+        max-height: none !important;
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+      }
+      :host ::ng-deep .ng-select .ng-select-container .ng-value-container .ng-input {
+        top: auto !important;
+        padding: 0 !important;
       }
       ::ng-deep .ng-select .ng-select-container .ng-value-container .ng-placeholder {
         color: #757575 !important;
@@ -94,15 +99,17 @@ export interface SelectOption {
         display: flex;
         flex-wrap: wrap;
         align-items: center;
-        gap: 0;
+        gap: 5px;
+        width: 100%;
       }
       :host ::ng-deep .ng-value-label {
         color: #344054;
-        font-size: 14px;
+        font-size: 12px;
         line-height: 20px;
-      }
-      :host ::ng-deep .ng-select.ng-select-multiple .ng-value-container .ng-value {
-        display: none;
+        display: inline-block;
+        border: 1px solid gray;
+        padding: 2px 4px;
+        border-radius: 10px;
       }
       :host ::ng-deep .ng-dropdown-panel {
         background-color: #ffffff !important;
@@ -180,7 +187,6 @@ export class BaseSelect implements ControlValueAccessor, OnInit {
   bindValue = input<string>('value');
   containerClass = input<string>('');
   iconCheck = input<boolean>(false);
-  showDropdown: boolean = false;
   value: any = null;
   isDisabled = false;
 
@@ -200,10 +206,6 @@ export class BaseSelect implements ControlValueAccessor, OnInit {
   get touched(): boolean {
     const c = this.ngControl?.control;
     return !!c && (c.touched || c.dirty);
-  }
-
-  open() {
-    return (this.showDropdown = !this.showDropdown);
   }
 
   ngOnInit() {
