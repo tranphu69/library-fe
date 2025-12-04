@@ -1,17 +1,33 @@
-import { Component, input, OnInit, Optional, Self } from '@angular/core';
-import { ControlValueAccessor, FormsModule, NgControl, Validators } from '@angular/forms';
-import { NgSelectModule } from '@ng-select/ng-select';
+import {
+  Component,
+  input,
+  Optional,
+  Self,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  OnInit,
+} from '@angular/core';
+import {
+  ControlValueAccessor,
+  FormsModule,
+  ReactiveFormsModule,
+  NgControl,
+  Validators,
+} from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { MatSelectModule } from '@angular/material/select';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 export interface SelectOption {
   value: any;
   label: string;
+  disabled?: boolean;
 }
 
 @Component({
   selector: 'app-base-select',
   standalone: true,
-  imports: [CommonModule, NgSelectModule, FormsModule],
+  imports: [CommonModule, MatFormFieldModule, MatSelectModule, FormsModule, ReactiveFormsModule],
   template: `
     <div class="width-full" [class]="containerClass()">
       <label class="text-label">
@@ -20,34 +36,31 @@ export interface SelectOption {
         <span class="color-required">*</span>
         }
       </label>
-      <ng-select
-        class="width-full"
-        [class.ng-invalid]="invalid"
-        [class.ng-touched]="touched"
-        [bindLabel]="bindLabel()"
-        [bindValue]="bindValue()"
-        [items]="options()"
-        [placeholder]="placeholder()"
-        [searchable]="searchable()"
-        [clearable]="clearable()"
-        [multiple]="multiple()"
-        [closeOnSelect]="!multiple()"
-        [hideSelected]="multiple()"
-        [disabled]="isDisabled"
-        [(ngModel)]="value"
-        (ngModelChange)="onModelChange($event)"
-        (blur)="onTouched()"
-      >
-        @if (multiple()) {
-        <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
-          <div class="ng-value-container-custom">
-            @for (item of items; track item;) {
-            <span class="ng-value-label">{{ item[bindLabel()] }}</span>
-            }
-          </div>
-        </ng-template>
-        }
-      </ng-select>
+      <div>
+        <mat-select
+          class="style-select width-full"
+          [ngClass]=""
+          [attr.aria-invalid]="invalid"
+          [placeholder]="placeholder()"
+          [disabled]="isDisabled"
+          [multiple]="multiple()"
+          [value]="value"
+          (selectionChange)="onChange($event)"
+          (blur)="onTouched()"
+          [panelClass]="'custom-select-panel'"
+        >
+          @if (showEmptyOption()) {
+          <mat-option [value]="null">{{ emptyOptionLabel() }}</mat-option>
+          } @for (option of options(); track option.value) {
+          <mat-option [value]="option.value" [disabled]="option.disabled">
+            {{ option.label }}
+          </mat-option>
+          }
+        </mat-select>
+      </div>
+      @if (hint()) {
+      <mat-hint class="text-hint">{{ hint() }}</mat-hint>
+      }
     </div>
   `,
   styles: [
@@ -66,168 +79,134 @@ export interface SelectOption {
         margin-left: 10px;
         margin-bottom: 5px;
       }
-      ::ng-deep .ng-select.ng-select-multiple .ng-select-container.ng-has-value .ng-placeholder {
-        display: none !important;
-      }
-      ::ng-deep .ng-select.ng-select-single .ng-select-container.ng-has-value .ng-placeholder {
-        display: none !important;
-      }
-      ::ng-deep .ng-select .ng-select-container {
-        border: 1px solid;
-        border-color: #d0d5dd !important;
+      .style-select {
+        border: 1px solid #d0d5dd;
         border-radius: 12px;
-        min-height: 44px !important;
+        min-height: 44px;
         height: auto !important;
-        padding: 10px 14px;
-        opacity: 1 !important;
-      }
-      :host ::ng-deep .ng-select .ng-select-container .ng-value-container {
-        height: auto !important;
-        max-height: none !important;
-        padding-top: 0 !important;
-        padding-bottom: 0 !important;
-      }
-      :host ::ng-deep .ng-select .ng-select-container .ng-value-container .ng-input {
-        top: auto !important;
-        padding: 0 !important;
-      }
-      ::ng-deep .ng-select .ng-select-container .ng-value-container .ng-placeholder {
-        color: #757575 !important;
-        opacity: 1 !important;
-      }
-      :host ::ng-deep .ng-value-container-custom {
+        font-size: 14px;
+        padding: 0px 14px;
         display: flex;
-        flex-wrap: wrap;
         align-items: center;
-        gap: 5px;
-        width: 100%;
       }
-      :host ::ng-deep .ng-value-label {
-        color: #344054;
+      .style-select:hover:not(.mat-select-disabled) {
+        border-color: rgba(204, 0, 51, 0.3);
+      }
+      .style-select.mat-select-focused:not(.mat-select-disabled) {
+        border-color: #cc0033;
+      }
+      .text-hint {
+        font-style: italic;
         font-size: 12px;
-        line-height: 20px;
-        display: inline-block;
-        border: 1px solid gray;
-        padding: 2px 4px;
-        border-radius: 10px;
+        color: #475467;
+        margin-left: 10px;
+        margin-top: 5px;
+        display: block;
       }
-      :host ::ng-deep .ng-dropdown-panel {
-        background-color: #ffffff !important;
-        border: 1px solid #d0d5dd !important;
-        border-radius: 12px !important;
-        box-shadow: 0px 4px 6px -2px rgba(16, 24, 40, 0.03),
-          0px 12px 16px -4px rgba(16, 24, 40, 0.08) !important;
-        margin-top: 8px !important;
-        overflow: hidden !important;
+      ::ng-deep .style-select .mat-select-trigger {
+        height: 100%;
+        display: flex;
+        align-items: center;
       }
-      :host ::ng-deep .ng-dropdown-panel .ng-dropdown-panel-items {
-        max-height: 280px !important;
-        padding: 8px !important;
-        background-color: #ffffff !important;
+      ::ng-deep .style-select .mat-select-value {
+        color: #101828;
       }
-      :host ::ng-deep .ng-dropdown-panel .ng-dropdown-panel-items .ng-option {
-        padding: 10px 14px !important;
-        font-size: 14px !important;
-        color: #344054 !important;
-        line-height: 20px !important;
-        border-radius: 8px !important;
-        margin: 2px 0 !important;
-        background-color: #ffffff !important;
-        cursor: pointer !important;
-        transition: all 0.15s ease !important;
+      ::ng-deep .style-select .mat-select-placeholder {
+        color: #98a2b3;
       }
-      :host ::ng-deep .ng-dropdown-panel .ng-dropdown-panel-items .ng-option:hover,
-      :host ::ng-deep .ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-marked {
-        background-color: gray !important;
-        color: #fff !important;
+      ::ng-deep .style-select .mat-select-arrow {
+        color: #667085;
       }
-      :host ::ng-deep .ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-selected {
-        background-color: #eff8ff !important;
-        color: #1570ef !important;
-        font-weight: 500 !important;
+      ::ng-deep .custom-select-panel {
+        border-radius: 8px;
+        margin-top: 4px;
       }
-      :host ::ng-deep .ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-disabled {
-        color: #98a2b3 !important;
-        background-color: #ffffff !important;
-        cursor: not-allowed !important;
-        opacity: 0.5 !important;
+      ::ng-deep .mat-mdc-select-value-text {
+        white-space: normal !important;
+        line-height: 1.4 !important;
+        word-break: break-word !important;
       }
-      :host ::ng-deep .ng-dropdown-panel .ng-dropdown-panel-items::-webkit-scrollbar {
-        width: 6px !important;
+      ::ng-deep .mat-mdc-select-trigger {
+        height: auto !important;
+        padding-top: 8px !important;
+        padding-bottom: 8px !important;
+        white-space: normal !important;
+        align-items: start !important;
       }
-      :host ::ng-deep .ng-dropdown-panel .ng-dropdown-panel-items::-webkit-scrollbar-track {
-        background: #f9fafb !important;
-        border-radius: 3px !important;
-      }
-      :host ::ng-deep .ng-dropdown-panel .ng-dropdown-panel-items::-webkit-scrollbar-thumb {
-        background: #d0d5dd !important;
-        border-radius: 3px !important;
-      }
-      :host ::ng-deep .ng-dropdown-panel .ng-dropdown-panel-items::-webkit-scrollbar-thumb:hover {
-        background: #98a2b3 !important;
+      ::ng-deep .mdc-list-item__primary-text {
+        white-space: normal !important;
+        line-height: 1.4 !important;
+        word-break: break-word !important;
       }
     `,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class BaseSelect implements ControlValueAccessor, OnInit {
+export class BaseSelect implements OnInit, ControlValueAccessor {
   private propagateChange = (_: any) => {};
 
-  constructor(@Optional() @Self() private ngControl: NgControl) {
-    if (this.ngControl) this.ngControl.valueAccessor = this as any;
+  constructor(@Optional() @Self() private ngControl: NgControl, private cd: ChangeDetectorRef) {
+    if (this.ngControl != null) {
+      this.ngControl.valueAccessor = this;
+    }
   }
 
   label = input<string>('');
-  placeholder = input<string>('');
-  options = input<SelectOption[]>([]);
+  placeholder = input<string>('Chọn...');
   hint = input<string>('');
-  searchable = input<boolean>(false);
-  clearable = input<boolean>(false);
-  multiple = input<boolean>(false);
-  bindLabel = input<string>('label');
-  bindValue = input<string>('value');
   containerClass = input<string>('');
-  iconCheck = input<boolean>(false);
+  options = input<SelectOption[]>([]);
+  multiple = input<boolean>(false);
+  showEmptyOption = input<boolean>(false);
+  emptyOptionLabel = input<string>('-- Không chọn --');
+
+  isDisabled: any = false;
   value: any = null;
-  isDisabled = false;
+
+  get invalid(): boolean {
+    const c = this.ngControl?.control;
+    if (!c) return false;
+    return c.invalid && (c.touched || c.dirty);
+  }
 
   get isRequired(): boolean {
     const c = this.ngControl?.control as any;
     if (!c) return false;
-    if (typeof c.hasValidator === 'function') return c.hasValidator(Validators.required);
+    if (typeof c.hasValidator === 'function') {
+      return c.hasValidator(Validators.required);
+    }
     const v = c.validator?.({} as any);
     return !!v?.['required'];
   }
 
-  get invalid(): boolean {
-    const c = this.ngControl?.control;
-    return !!c && c.invalid;
-  }
-
-  get touched(): boolean {
-    const c = this.ngControl?.control;
-    return !!c && (c.touched || c.dirty);
-  }
-
   ngOnInit() {
-    if (this.multiple() && !this.value) this.value = [];
+    const c = this.ngControl?.control;
+    if (!c) return;
+    c.statusChanges.subscribe(() => this.cd.markForCheck());
+    const origMarkAsTouched = c.markAsTouched.bind(c);
+    c.markAsTouched = (...args) => {
+      origMarkAsTouched(...args);
+      this.cd.markForCheck();
+    };
   }
 
-  onModelChange = (val: any) => {
-    this.value = val;
-    this.propagateChange(val);
-  };
-
-  onTouched = () => {
-    this.ngControl?.control?.markAsTouched();
+  onChange = (event: any) => {
+    this.value = event.value;
+    this.propagateChange(this.value);
   };
 
   writeValue(value: any): void {
-    this.value = value || (this.multiple() ? [] : null);
+    this.value = value;
+    this.cd.markForCheck();
   }
 
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
+
+  onTouched = () => {
+    this.ngControl?.control?.markAsTouched();
+  };
 
   registerOnTouched(fn: any): void {
     this.onTouched = () => {
@@ -238,5 +217,6 @@ export class BaseSelect implements ControlValueAccessor, OnInit {
 
   setDisabledState(isDisabled: boolean): void {
     this.isDisabled = isDisabled;
+    this.cd.markForCheck();
   }
 }

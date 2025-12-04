@@ -45,7 +45,7 @@ export class FormModal {
   dialogTemplate = viewChild<TemplateRef<any>>('dialogTemplate');
   isOpen = input<boolean>(false);
   record = input<Role | null>(null);
-  @Input() listPermissions: Permission[] = [];
+  @Input() listPermissions: any[] = [];
   @Input() params!: ListRole;
   @Output() paramsChange = new EventEmitter<ListRole>();
   @Output() openModalChange = new EventEmitter<boolean>();

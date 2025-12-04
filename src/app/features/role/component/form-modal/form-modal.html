@@ -37,8 +37,8 @@
       <mat-label>Quyền thao tác *</mat-label>
       <mat-form-field>
         <mat-select formControlName="permissions" placeholder="Chọn các quyền thao tác" multiple>
-          <mat-option *ngFor="let listPermission of listPermissions" [value]="listPermission.id">
-            {{ listPermission.name }}
+          <mat-option *ngFor="let listPermission of listPermissions" [value]="listPermission.value">
+            {{ listPermission.label }}
           </mat-option>
         </mat-select>
         <mat-error *ngIf="roleForm.get('permissions')?.invalid">
