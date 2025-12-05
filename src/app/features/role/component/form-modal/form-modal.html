@@ -4,47 +4,52 @@
   </h2>
   <mat-dialog-content>
     <form [formGroup]="roleForm">
-      <mat-label>Tên *</mat-label>
-      <mat-form-field>
-        <input matInput formControlName="name" placeholder="Nhập tên" maxlength="100" />
+      <div class="margin-top">
+        <app-base-input
+          maxlength="100"
+          formControlName="name"
+          placeholder="Nhập tên vai trò"
+          label="Tên vai trò"
+        />
         <mat-error *ngIf="roleForm.get('name')?.invalid">
           {{ getErrorMessage('name') }}
         </mat-error>
-      </mat-form-field>
-      <mat-label>Mô tả</mat-label>
-      <mat-form-field>
-        <textarea
-          matInput
+      </div>
+      <div class="margin-top">
+        <app-base-input
+          maxlength="255"
           formControlName="description"
           placeholder="Nhập mô tả"
-          maxlength="255"
-        ></textarea>
+          label="Mô tả"
+        />
         <mat-error *ngIf="roleForm.get('description')?.invalid">
           {{ getErrorMessage('description') }}
         </mat-error>
-      </mat-form-field>
-      <mat-label>Trạng thái *</mat-label>
-      <mat-form-field>
-        <mat-select formControlName="action" placeholder="Chọn trạng thái">
-          <mat-option *ngFor="let action of actions" [value]="action.value">
-            {{ action.label }}
-          </mat-option>
-        </mat-select>
+      </div>
+      <div class="margin-top">
+        <app-base-select
+          formControlName="action"
+          placeholder="Chọn trạng thái"
+          label="Trạng thái"
+          [options]="actions"
+        />
         <mat-error *ngIf="roleForm.get('action')?.invalid">
           {{ getErrorMessage('action') }}
         </mat-error>
-      </mat-form-field>
-      <mat-label>Quyền thao tác *</mat-label>
-      <mat-form-field>
-        <mat-select formControlName="permissions" placeholder="Chọn các quyền thao tác" multiple>
-          <mat-option *ngFor="let listPermission of listPermissions" [value]="listPermission.value">
-            {{ listPermission.label }}
-          </mat-option>
-        </mat-select>
+      </div>
+      <div class="margin-top">
+        <app-base-select
+          formControlName="permissions"
+          placeholder="Chọn các quyền thao tác"
+          label="Quyền thao tác"
+          [options]="listPermissions"
+          [multiple]="true"
+          [allClear]="true"
+        />
         <mat-error *ngIf="roleForm.get('permissions')?.invalid">
           {{ getErrorMessage('permissions') }}
         </mat-error>
-      </mat-form-field>
+      </div>
     </form>
   </mat-dialog-content>
   <mat-dialog-actions>

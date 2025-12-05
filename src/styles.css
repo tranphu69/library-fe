@@ -399,3 +399,15 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .mat-mdc-option .mat-pseudo-checkbox {
   --mat-pseudo-checkbox-minimal-selected-checkmark-color: #EE0033 !important;
 }
+
+/*css button of popup*/
+.mat-mdc-raised-button {
+  border-radius: 12px !important;
+}
+.mat-mdc-button {
+  border: 1px solid #D0D5DD !important;
+  border-radius: 12px !important;
+}
+.mat-mdc-raised-button:not(:disabled) {
+  background-color: #EE0033 !important;
+}

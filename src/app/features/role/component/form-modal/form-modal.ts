@@ -19,6 +19,8 @@ import { Role, ListRole } from '../../../../models/role.model';
 import { CommonModule } from '@angular/common';
 import { RoleService } from '../../service/role.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { BaseInput } from '../../../../shared/components/base-input/base-input';
+import { BaseSelect } from '../../../../shared/components/base-select/base-select';
 
 @Component({
   selector: 'app-form-modal',
@@ -31,6 +33,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
     MatSelectModule,
     ReactiveFormsModule,
     CommonModule,
+    BaseInput,
+    BaseSelect,
   ],
   templateUrl: './form-modal.html',
   styleUrl: './form-modal.css',

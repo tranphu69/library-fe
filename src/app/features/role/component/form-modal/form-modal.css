@@ -5,3 +5,7 @@ textarea[formControlName="description"] {
 .mat-mdc-dialog-actions {
   justify-content: flex-end;
 }
+
+.margin-top {
+  margin-top: 10px;
+}
