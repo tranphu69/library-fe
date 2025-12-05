@@ -18,6 +18,7 @@ import { CommonModule } from '@angular/common';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-base-input',
@@ -29,6 +30,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
     FormsModule,
     ReactiveFormsModule,
     MatAutocompleteModule,
+    MatIconModule,
   ],
   template: `
     <div class="width-full" [class]="containerClass()">
@@ -38,7 +40,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
         <span class="color-required">*</span>
         }
       </label>
-      <div>
+      <div class="input-wrapper">
         <input
           style="outline: none"
           class="style-input width-full"
@@ -56,6 +58,17 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
           (input)="onChange($event)"
           (blur)="onTouched()"
         />
+        @if (showClearIcon()) {
+        <button
+          type="button"
+          class="clear-button"
+          (click)="clearValue()"
+          [disabled]="isDisabled"
+          tabindex="-1"
+        >
+          <mat-icon class="clear-icon">close</mat-icon>
+        </button>
+        }
       </div>
       @if (hint()) {
       <mat-hint class="text-hint">{{ hint() }}</mat-hint>
@@ -78,11 +91,16 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
         margin-left: 10px;
         margin-bottom: 5px;
       }
+      .input-wrapper {
+        position: relative;
+        width: 100%;
+      }
       .style-input {
         border: 1px solid #d0d5dd;
         border-radius: 12px;
         height: 44px;
         padding: 10px 14px;
+        padding-right: 40px;
       }
       .text-hint {
         font-style: italic;
@@ -94,6 +112,37 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
       }
       .style-input:focus:not(:disabled) {
         border-color: #cc0033;
+      }
+      .clear-button {
+        position: absolute;
+        right: 8px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        padding: 4px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        transition: background-color 0.2s;
+      }
+      .clear-button:hover:not(:disabled) {
+        background-color: rgba(0, 0, 0, 0.04);
+      }
+      .clear-button:disabled {
+        cursor: not-allowed;
+        opacity: 0.5;
+      }
+      .clear-icon {
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
+        color: #98a2b3;
+      }
+      .clear-button:hover:not(:disabled) .clear-icon {
+        color: #475467;
       }
     `,
   ],
@@ -114,6 +163,7 @@ export class BaseInput implements OnInit, ControlValueAccessor {
   hint = input<string>('');
   maxlength = input<string>('');
   containerClass = input<string>('');
+  clearable = input<boolean>(true);
   isDisabled: any = false;
   numberType = input<'integer' | 'decimal'>('decimal');
   matAutocomplete = input<any>(null);
@@ -134,6 +184,16 @@ export class BaseInput implements OnInit, ControlValueAccessor {
     }
     const v = c.validator?.({} as any);
     return !!v?.['required'];
+  }
+
+  showClearIcon(): boolean {
+    return this.clearable() && this.value && this.value !== '' && !this.isDisabled;
+  }
+
+  clearValue(): void {
+    this.value = '';
+    this.propagateChange(null);
+    this.cd.markForCheck();
   }
 
   ngOnInit() {
@@ -247,6 +307,7 @@ export class BaseInput implements OnInit, ControlValueAccessor {
     const newCursorPos = cursorPosition + cleanedPaste.length;
     input.setSelectionRange(newCursorPos, newCursorPos);
     this.propagateChange(this.value === '' ? null : this.value);
+    this.cd.markForCheck();
   }
 
   cleanNumberValue(value: string): string {
@@ -299,6 +360,7 @@ export class BaseInput implements OnInit, ControlValueAccessor {
     }
     this.value = newValue;
     this.propagateChange(this.value === '' || this.value === null ? null : this.value);
+    this.cd.markForCheck();
   };
 
   writeValue(value: any): void {
@@ -307,6 +369,7 @@ export class BaseInput implements OnInit, ControlValueAccessor {
     } else {
       this.value = '';
     }
+    this.cd.markForCheck();
   }
 
   registerOnChange(fn: any): void {
@@ -326,5 +389,6 @@ export class BaseInput implements OnInit, ControlValueAccessor {
 
   setDisabledState(isDisabled: boolean): void {
     this.isDisabled = isDisabled;
+    this.cd.markForCheck();
   }
 }

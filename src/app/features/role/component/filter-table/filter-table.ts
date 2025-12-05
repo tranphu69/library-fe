@@ -1,14 +1,13 @@
-import { Component, Output, EventEmitter, Input, inject, computed } from '@angular/core';
+import { Component, Output, EventEmitter, Input, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { ListRole } from '../../../../models/role.model';
 import { RoleService } from '../../service/role.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { FormBuilder, FormGroup, ReactiveFormsModule, FormControl } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { CommonModule } from '@angular/common';
-import { Permission } from '../../../../models/permission.model';
 import { Observable } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -74,7 +73,7 @@ export class FilterTable {
     const formValue = this.roleFormFilter.value;
     const updatedParams = {
       ...this.params,
-      name: formValue?.name.trim() ?? '',
+      name: formValue?.name?.trim() ?? '',
       permissions: formValue?.permissions.length ? formValue?.permissions?.join(',') : '',
       action: formValue?.action ?? '',
     };
@@ -112,6 +111,10 @@ export class FilterTable {
 
   onOpenImport() {
     this.onModalChangeImport.emit(true);
+  }
+
+  onOptionSelected(event: any) {
+    this.roleFormFilter.get('name')?.setValue(event.option.value);
   }
 
   onExport() {

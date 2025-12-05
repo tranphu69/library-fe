@@ -6,7 +6,6 @@ import { ListTable } from '../component/list-table/list-table';
 import { FormsModule } from '@angular/forms';
 import { Data } from '../../../models/base.model';
 import { FormModal } from '../component/form-modal/form-modal';
-import { Permission } from '../../../models/permission.model';
 import { FilterTable } from '../component/filter-table/filter-table';
 import { ImportModal } from '../component/import-modal/import-modal';
 

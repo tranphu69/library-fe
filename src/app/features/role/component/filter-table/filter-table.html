@@ -10,7 +10,7 @@
           label="Tên vai trò"
         >
         </app-base-input>
-        <mat-autocomplete #auto="matAutocomplete">
+        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onOptionSelected($event)">
           <mat-option *ngFor="let item of suggestions$ | async" [value]="item">
             {{ item }}
           </mat-option>
@@ -22,6 +22,7 @@
           placeholder="Chọn trạng thái"
           label="Trạng thái"
           [options]="actions"
+          [allClear]="true"
         />
       </div>
       <div>
@@ -31,6 +32,7 @@
           label="Quyền thao tác"
           [options]="listPermissions"
           [multiple]="true"
+          [allClear]="true"
         />
       </div>
     </div>

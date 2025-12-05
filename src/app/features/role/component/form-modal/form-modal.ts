@@ -19,7 +19,6 @@ import { Role, ListRole } from '../../../../models/role.model';
 import { CommonModule } from '@angular/common';
 import { RoleService } from '../../service/role.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Permission } from '../../../../models/permission.model';
 
 @Component({
   selector: 'app-form-modal',

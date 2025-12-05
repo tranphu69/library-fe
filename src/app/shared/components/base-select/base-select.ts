@@ -16,6 +16,7 @@ import {
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatSelectModule } from '@angular/material/select';
+import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 
 export interface SelectOption {
@@ -27,7 +28,14 @@ export interface SelectOption {
 @Component({
   selector: 'app-base-select',
   standalone: true,
-  imports: [CommonModule, MatFormFieldModule, MatSelectModule, FormsModule, ReactiveFormsModule],
+  imports: [
+    CommonModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatIconModule,
+  ],
   template: `
     <div class="width-full" [class]="containerClass()">
       <label class="text-label">
@@ -36,7 +44,7 @@ export interface SelectOption {
         <span class="color-required">*</span>
         }
       </label>
-      <div>
+      <div class="select-wrapper">
         <mat-select
           class="style-select width-full"
           [ngClass]=""
@@ -57,6 +65,17 @@ export interface SelectOption {
           </mat-option>
           }
         </mat-select>
+        @if (allClear() && hasValue() && !isDisabled) {
+        <button
+          mat-icon-button
+          class="clear-btn-inside"
+          (click)="clearValue($event)"
+          aria-label="Clear selection"
+          type="button"
+        >
+          <mat-icon>close</mat-icon>
+        </button>
+        }
       </div>
       @if (hint()) {
       <mat-hint class="text-hint">{{ hint() }}</mat-hint>
@@ -79,6 +98,9 @@ export interface SelectOption {
         margin-left: 10px;
         margin-bottom: 5px;
       }
+      .select-wrapper {
+        position: relative;
+      }
       .style-select {
         border: 1px solid #d0d5dd;
         border-radius: 12px;
@@ -86,8 +108,34 @@ export interface SelectOption {
         height: auto !important;
         font-size: 14px;
         padding: 0px 14px;
+        padding-right: 48px;
         display: flex;
         align-items: center;
+      }
+      .clear-btn-inside {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-30%);
+        width: 24px;
+        height: 24px;
+        min-width: 24px;
+        padding: 0;
+        line-height: 24px;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        z-index: 10;
+      }
+      .clear-btn-inside mat-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+        line-height: 18px;
+        color: #667085;
+      }
+      .clear-btn-inside:hover mat-icon {
+        color: #cc0033;
       }
       .style-select:hover:not(.mat-select-disabled) {
         border-color: rgba(204, 0, 51, 0.3);
@@ -158,6 +206,7 @@ export class BaseSelect implements OnInit, ControlValueAccessor {
   options = input<SelectOption[]>([]);
   multiple = input<boolean>(false);
   showEmptyOption = input<boolean>(false);
+  allClear = input<boolean>(false);
   emptyOptionLabel = input<string>('-- Không chọn --');
 
   isDisabled: any = false;
@@ -194,6 +243,22 @@ export class BaseSelect implements OnInit, ControlValueAccessor {
     this.value = event.value;
     this.propagateChange(this.value);
   };
+
+  hasValue(): boolean {
+    if (this.multiple()) {
+      return Array.isArray(this.value) && this.value.length > 0;
+    }
+    return this.value !== null && this.value !== undefined && this.value !== '';
+  }
+
+  clearValue(event: Event) {
+    event.stopPropagation();
+    event.preventDefault();
+    this.value = this.multiple() ? [] : null;
+    this.propagateChange(this.value);
+    this.onTouched();
+    this.cd.markForCheck();
+  }
 
   writeValue(value: any): void {
     this.value = value;
