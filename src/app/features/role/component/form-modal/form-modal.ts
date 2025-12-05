@@ -21,6 +21,7 @@ import { RoleService } from '../../service/role.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { BaseInput } from '../../../../shared/components/base-input/base-input';
 import { BaseSelect } from '../../../../shared/components/base-select/base-select';
+import { MatDividerModule } from '@angular/material/divider';
 
 @Component({
   selector: 'app-form-modal',
@@ -35,6 +36,7 @@ import { BaseSelect } from '../../../../shared/components/base-select/base-selec
     CommonModule,
     BaseInput,
     BaseSelect,
+    MatDividerModule,
   ],
   templateUrl: './form-modal.html',
   styleUrl: './form-modal.css',

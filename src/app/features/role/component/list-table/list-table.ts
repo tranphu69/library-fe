@@ -6,6 +6,8 @@ import {
   Output,
   EventEmitter,
   inject,
+  signal,
+  input,
 } from '@angular/core';
 import { ColumnConfig } from '../../../../models/base.model';
 import { ListRole, Role } from '../../../../models/role.model';
@@ -25,6 +27,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { RoleService } from '../../service/role.service';
 import { SelectionModel } from '@angular/cdk/collections';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { WarningPopup } from '../../../../shared/components/warning-popup/warning-popup';
 
 @Component({
   selector: 'app-list-table',
@@ -40,6 +43,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     MatIconModule,
     MatButtonModule,
     MatCheckboxModule,
+    WarningPopup,
   ],
   providers: [DatePipe],
   templateUrl: './list-table.html',
@@ -66,6 +70,8 @@ export class ListTable implements OnChanges {
   get columnConfig(): ColumnConfig[] {
     return this._columnConfig;
   }
+  isOpenWarning = signal(false);
+  selectedRow: any = null;
   @Input() params!: ListRole;
   @Input() loading!: boolean;
   displayedColumns: string[] = [];
@@ -185,6 +191,21 @@ export class ListTable implements OnChanges {
         console.log('err: ', err);
       },
     });
+  }
+
+  onModalChange(value: boolean | Event, row?: any) {
+    const newValue = typeof value === 'boolean' ? value : false;
+    this.isOpenWarning.set(newValue);
+    if (row) {
+      this.selectedRow = row;
+    }
+  }
+
+  onConfirmDelete() {
+    if (this.selectedRow) {
+      this.onDelete(this.selectedRow);
+      this.selectedRow = null;
+    }
   }
 
   onDelete(row: any) {

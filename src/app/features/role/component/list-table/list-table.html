@@ -65,7 +65,7 @@
               <mat-icon>edit</mat-icon>
               <span>Chỉnh sửa</span>
             </button>
-            <button mat-menu-item (click)="onDelete(row)">
+            <button mat-menu-item (click)="onModalChange(true, row)">
               <mat-icon color="warn">delete</mat-icon>
               <span>Xóa</span>
             </button>
@@ -92,4 +92,11 @@
     (page)="onPaginatorChange($event)"
   >
   </mat-paginator>
+  <app-warning-popup
+    (openModalChange)="onModalChange($event)"
+    [isOpen]="isOpenWarning()"
+    [title]="'Xóa vai trò!'"
+    [description]="'Bạn có chắc chắn muốn xóa vai trò này không!'"
+    (confirmed)="onConfirmDelete()"
+  ></app-warning-popup>
 </div>

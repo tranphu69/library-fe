@@ -85,28 +85,28 @@ export class FilterTable {
   }
 
   onDelete() {
-    this.roleService.postListDeletes(this.listSelect).subscribe({
-      next: (res) => {
-        this.snackBar.open('Xóa thành công!', 'Đóng', {
-          duration: 3000,
-          horizontalPosition: 'left',
-          verticalPosition: 'top',
-        });
-        this.paramsChange.emit({
-          ...this.params,
-          sortBy: 'createdAt',
-          sortType: 'DESC',
-        });
-      },
-      error: (err) => {
-        console.log('err: ', err);
-        this.snackBar.open('Xóa không thành công!', 'Đóng', {
-          duration: 3000,
-          horizontalPosition: 'left',
-          verticalPosition: 'top',
-        });
-      },
-    });
+    // this.roleService.postListDeletes(this.listSelect).subscribe({
+    //   next: (res) => {
+    //     this.snackBar.open('Xóa thành công!', 'Đóng', {
+    //       duration: 3000,
+    //       horizontalPosition: 'left',
+    //       verticalPosition: 'top',
+    //     });
+    //     this.paramsChange.emit({
+    //       ...this.params,
+    //       sortBy: 'createdAt',
+    //       sortType: 'DESC',
+    //     });
+    //   },
+    //   error: (err) => {
+    //     console.log('err: ', err);
+    //     this.snackBar.open('Xóa không thành công!', 'Đóng', {
+    //       duration: 3000,
+    //       horizontalPosition: 'left',
+    //       verticalPosition: 'top',
+    //     });
+    //   },
+    // });
   }
 
   onOpenImport() {
